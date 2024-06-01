@@ -42,3 +42,5 @@ npm-debug.log
 
 .envrc
 .elixir-tools
+
+.direnv/
