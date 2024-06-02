@@ -2,9 +2,15 @@
 
 ## TODO
 
-- [ ] Show episodes in /
+- [ ] Show shorter description in index
+- [ ] Re-generate description into article or summarize
+- [ ] Title suggestion
+- [ ] Auth for admin site
+- [ ] Deploy
 - [ ] Admin site for managing Episodes
 - [ ] How to get all youtube videos from playlist? 
+- [x] Change videoid to youtubeid
+- [x] Show episodes in /
 - [x] Schedule insert data youtube to database
 
 To start your Phoenix server:

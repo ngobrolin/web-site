@@ -28,7 +28,7 @@ defmodule Ngobrolin.YoutubeApi do
     |> Enum.map(fn item ->
       %{
         title: Map.get(item, "snippet")["title"],
-        video_id: Map.get(item, "id"),
+        video_id: Map.get(item, "snippet")["resourceId"]["videoId"],
         description: Map.get(item, "snippet")["description"],
         artwork: Map.get(item, "snippet")["thumbnails"]["maxres"]["url"]
       }

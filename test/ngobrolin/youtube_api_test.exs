@@ -11,6 +11,9 @@ defmodule Ngobrolin.YoutubeMockApi do
           etag: "THKvJKXioTsGnWNCuLZ0rUjut2k",
           id: "UExUWTJuVzRqd3RHOFN4MkJ3NlFTaEMyNzFQelgzMUN0VC40NzE2MTY1QTM3RUI3QkU3",
           snippet: %{
+            resourceId: %{
+              videoId: "abcxyz"
+            },
             publishedAt: "2024-05-27T03:10:30Z",
             channelId: "UCHhAlFGFCGgIusQkQIqJLYw",
             title: "Mengintip Masa Depan Web AI: Apa yang Disiapkan Google?",
@@ -28,6 +31,9 @@ defmodule Ngobrolin.YoutubeMockApi do
           etag: "TQKvJKXioTsGnWNCuLZ0rUjut2k",
           id: "UCxUWTJuVzRqd3RHOFN4MkJ3NlFTaEMyNzFQelgzMUN0VC40NzE2MTY1QTM3RUI3QkU3",
           snippet: %{
+            resourceId: %{
+              videoId: "hasldaasdo"
+            },
             publishedAt: "2024-04-27T03:10:30Z",
             channelId: "UCHhAlFGFCGgIusQkQIqJLYw",
             title: "Title 2",
@@ -72,7 +78,7 @@ defmodule Ngobrolin.YoutubeApiTest do
         description:
           "Mengintip Masa Depan Web AI: Apa yang Disiapkan Google? -\n\nPada episode ini, kita akan membahas tentang masa depan web AI dan apa yang disiapkan Google untuknya.",
         artwork: "test",
-        youtubeid: "UCxUWTJuVzRqd3RHOFN4MkJ3NlFTaEMyNzFQelgzMUN0VC40NzE2MTY1QTM3RUI3QkU3"
+        youtubeid: "hasldaasdo"
       })
 
     # call request_episodes_from_playlist
@@ -86,7 +92,7 @@ defmodule Ngobrolin.YoutubeApiTest do
         title: episode.title,
         youtubeid: episode.video_id,
         description: episode.description,
-        artwork: "test"
+        artwork: episode.artwork
       })
     end)
 
