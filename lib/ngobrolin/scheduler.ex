@@ -23,7 +23,7 @@ defmodule Ngobrolin.Scheduler do
         title: episode.title,
         youtubeid: episode.video_id,
         description: episode.description,
-        artwork: "test"
+        artwork: episode.artwork
       })
     end)
 

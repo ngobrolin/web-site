@@ -1,9 +1,10 @@
 defmodule NgobrolinWeb.PageController do
   use NgobrolinWeb, :controller
 
+  alias Ngobrolin.Content
+
   def home(conn, _params) do
-    # The home page is often custom made,
-    # so skip the default app layout.
-    render(conn, :home, layout: false)
+    episodes = Content.list_episodes()
+    render(conn, :home, episodes: episodes)
   end
 end
