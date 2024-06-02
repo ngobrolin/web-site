@@ -7,7 +7,13 @@ defmodule Ngobrolin.YoutubeApi do
   Get videos from playlist
   """
   def request_episodes_from_playlist(playlist_id) do
-    {:ok, %Finch.Response{status: 200, body: body}} = Finch.build(:get, "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=100&playlistId=#{playlist_id}&key=#{System.get_env("YOUTUBE_API_KEY")}") |> Finch.request(Ngobrolin.Finch)
+    {:ok, %Finch.Response{status: 200, body: body}} =
+      Finch.build(
+        :get,
+        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=100&playlistId=#{playlist_id}&key=#{System.get_env("YOUTUBE_API_KEY")}"
+      )
+      |> Finch.request(Ngobrolin.Finch)
+
     body
   end
 

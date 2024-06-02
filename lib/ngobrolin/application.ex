@@ -11,8 +11,7 @@ defmodule Ngobrolin.Application do
       NgobrolinWeb.Telemetry,
       Ngobrolin.Repo,
       {Ecto.Migrator,
-        repos: Application.fetch_env!(:ngobrolin, :ecto_repos),
-        skip: skip_migrations?()},
+       repos: Application.fetch_env!(:ngobrolin, :ecto_repos), skip: skip_migrations?()},
       {DNSCluster, query: Application.get_env(:ngobrolin, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Ngobrolin.PubSub},
       # Start the Finch HTTP client for sending emails

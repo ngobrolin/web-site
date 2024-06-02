@@ -21,7 +21,14 @@ defmodule Ngobrolin.ContentTest do
     end
 
     test "create_episode/1 with valid data creates a episode" do
-      valid_attrs = %{artwork: "some artwork", description: "some description", title: "some title", youtubeid: "some youtubeid", audio_url: "some audio_url", video_url: "some video_url"}
+      valid_attrs = %{
+        artwork: "some artwork",
+        description: "some description",
+        title: "some title",
+        youtubeid: "some youtubeid",
+        audio_url: "some audio_url",
+        video_url: "some video_url"
+      }
 
       assert {:ok, %Episode{} = episode} = Content.create_episode(valid_attrs)
       assert episode.artwork == "some artwork"
@@ -38,7 +45,15 @@ defmodule Ngobrolin.ContentTest do
 
     test "update_episode/2 with valid data updates the episode" do
       episode = episode_fixture()
-      update_attrs = %{artwork: "some updated artwork", description: "some updated description", title: "some updated title", youtubeid: "some updated youtubeid", audio_url: "some updated audio_url", video_url: "some updated video_url"}
+
+      update_attrs = %{
+        artwork: "some updated artwork",
+        description: "some updated description",
+        title: "some updated title",
+        youtubeid: "some updated youtubeid",
+        audio_url: "some updated audio_url",
+        video_url: "some updated video_url"
+      }
 
       assert {:ok, %Episode{} = episode} = Content.update_episode(episode, update_attrs)
       assert episode.artwork == "some updated artwork"

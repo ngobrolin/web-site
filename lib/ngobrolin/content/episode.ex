@@ -20,5 +20,6 @@ defmodule Ngobrolin.Content.Episode do
     episode
     |> cast(attrs, [:title, :description, :youtubeid, :artwork, :audio_url, :video_url])
     |> validate_required([:title, :description, :youtubeid, :artwork])
+    |> unique_constraint(:youtubeid)
   end
 end

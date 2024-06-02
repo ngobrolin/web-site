@@ -3,8 +3,18 @@ defmodule NgobrolinWeb.EpisodeControllerTest do
 
   import Ngobrolin.ContentFixtures
 
-  @create_attrs %{artwork: "some artwork", description: "some description", title: "some title", youtubeid: "some youtubeid"}
-  @update_attrs %{artwork: "some updated artwork", description: "some updated description", title: "some updated title", youtubeid: "some updated youtubeid"}
+  @create_attrs %{
+    artwork: "some artwork",
+    description: "some description",
+    title: "some title",
+    youtubeid: "some youtubeid"
+  }
+  @update_attrs %{
+    artwork: "some updated artwork",
+    description: "some updated description",
+    title: "some updated title",
+    youtubeid: "some updated youtubeid"
+  }
   @invalid_attrs %{artwork: nil, description: nil, title: nil, youtubeid: nil}
 
   describe "index" do
