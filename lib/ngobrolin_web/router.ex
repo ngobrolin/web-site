@@ -18,6 +18,7 @@ defmodule NgobrolinWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    resources "/episodes", EpisodeController
   end
 
   # Other scopes may use custom stacks.

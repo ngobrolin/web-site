@@ -1,5 +1,5 @@
 defmodule Ngobrolin.YoutubeMockApi do
-  def request_videos_from_playlist(_playlist_id) do
+  def request_episodes_from_playlist(_playlist_id) do
     Jason.encode!(%{
       kind: "youtube#playlistItemListResponse",
       etag: "J9J7JlR2zvcYaVAdR8WeNb5EEAI",
@@ -40,9 +40,12 @@ defmodule Ngobrolin.YoutubeApiTest do
     assert true
   end
 
-  test "Get videos from playlist" do
-    videos = Ngobrolin.YoutubeMockApi.request_videos_from_playlist(@playlist_id) |> Ngobrolin.YoutubeApi.parse_body()
-    assert Enum.count(videos) > 1
+  test "Get episodes from playlist" do
+    episodes = Ngobrolin.YoutubeMockApi.request_episodes_from_playlist(@playlist_id) |> Ngobrolin.YoutubeApi.parse_body()
+    assert Enum.count(episodes) > 1
   end
+
+  test "save episodes to database"
+  test "skip save episode if already exists" #using upsert
 
 end

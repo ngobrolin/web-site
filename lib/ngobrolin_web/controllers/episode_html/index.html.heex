@@ -1,0 +1,26 @@
+<.header>
+  Listing Episodes
+  <:actions>
+    <.link href={~p"/episodes/new"}>
+      <.button>New Episode</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="episodes" rows={@episodes} row_click={&JS.navigate(~p"/episodes/#{&1}")}>
+  <:col :let={episode} label="Title"><%= episode.title %></:col>
+  <:col :let={episode} label="Description"><%= episode.description %></:col>
+  <:col :let={episode} label="Youtubeid"><%= episode.youtubeid %></:col>
+  <:col :let={episode} label="Artwork"><%= episode.artwork %></:col>
+  <:action :let={episode}>
+    <div class="sr-only">
+      <.link navigate={~p"/episodes/#{episode}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/episodes/#{episode}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={episode}>
+    <.link href={~p"/episodes/#{episode}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

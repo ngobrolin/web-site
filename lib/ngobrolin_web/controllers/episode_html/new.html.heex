@@ -1,0 +1,8 @@
+<.header>
+  New Episode
+  <:subtitle>Use this form to manage episode records in your database.</:subtitle>
+</.header>
+
+<.episode_form changeset={@changeset} action={~p"/episodes"} />
+
+<.back navigate={~p"/episodes"}>Back to episodes</.back>
