@@ -9,6 +9,8 @@ defmodule Ngobrolin.Content.Episode do
     field :description, :string
     field :title, :string
     field :youtubeid, :string
+    field :audio_url, :string
+    field :video_url, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -16,7 +18,7 @@ defmodule Ngobrolin.Content.Episode do
   @doc false
   def changeset(episode, attrs) do
     episode
-    |> cast(attrs, [:title, :description, :youtubeid, :artwork])
+    |> cast(attrs, [:title, :description, :youtubeid, :artwork, :audio_url, :video_url])
     |> validate_required([:title, :description, :youtubeid, :artwork])
   end
 end

@@ -21,13 +21,15 @@ defmodule Ngobrolin.ContentTest do
     end
 
     test "create_episode/1 with valid data creates a episode" do
-      valid_attrs = %{artwork: "some artwork", description: "some description", title: "some title", youtubeid: "some youtubeid"}
+      valid_attrs = %{artwork: "some artwork", description: "some description", title: "some title", youtubeid: "some youtubeid", audio_url: "some audio_url", video_url: "some video_url"}
 
       assert {:ok, %Episode{} = episode} = Content.create_episode(valid_attrs)
       assert episode.artwork == "some artwork"
       assert episode.description == "some description"
       assert episode.title == "some title"
       assert episode.youtubeid == "some youtubeid"
+      assert episode.audio_url == "some audio_url"
+      assert episode.video_url == "some video_url"
     end
 
     test "create_episode/1 with invalid data returns error changeset" do
@@ -36,13 +38,15 @@ defmodule Ngobrolin.ContentTest do
 
     test "update_episode/2 with valid data updates the episode" do
       episode = episode_fixture()
-      update_attrs = %{artwork: "some updated artwork", description: "some updated description", title: "some updated title", youtubeid: "some updated youtubeid"}
+      update_attrs = %{artwork: "some updated artwork", description: "some updated description", title: "some updated title", youtubeid: "some updated youtubeid", audio_url: "some updated audio_url", video_url: "some updated video_url"}
 
       assert {:ok, %Episode{} = episode} = Content.update_episode(episode, update_attrs)
       assert episode.artwork == "some updated artwork"
       assert episode.description == "some updated description"
       assert episode.title == "some updated title"
       assert episode.youtubeid == "some updated youtubeid"
+      assert episode.audio_url == "some updated audio_url"
+      assert episode.video_url == "some updated video_url"
     end
 
     test "update_episode/2 with invalid data returns error changeset" do
