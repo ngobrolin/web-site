@@ -7,7 +7,7 @@
     <div class="episode">
       <img src={episode.artwork} alt="Episode 1" />
       <h3><%= episode.title %></h3>
-      <p><%= episode.description %></p>
+      <p><%= truncate(episode.description, 250) %>...</p>
       <a href="#">Lihat Episode</a>
     </div>
   <% end %>

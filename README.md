@@ -2,7 +2,7 @@
 
 ## TODO
 
-- [ ] Show shorter description in index
+- [x] Show shorter description in index
 - [ ] Re-generate description into article or summarize
 - [ ] Title suggestion
 - [ ] Auth for admin site
