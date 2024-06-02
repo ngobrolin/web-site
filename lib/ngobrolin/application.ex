@@ -18,6 +18,7 @@ defmodule Ngobrolin.Application do
       {Finch, name: Ngobrolin.Finch},
       # Start a worker by calling: Ngobrolin.Worker.start_link(arg)
       # {Ngobrolin.Worker, arg},
+      {Ngobrolin.Scheduler, []},
       # Start to serve requests, typically the last entry
       NgobrolinWeb.Endpoint
     ]

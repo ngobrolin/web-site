@@ -6,13 +6,17 @@ defmodule Ngobrolin.YoutubeApi do
   @doc """
   Get videos from playlist
   """
-  def request_episodes_from_playlist(playlist_id) do
+  def request_episodes_from_playlist(playlist_id, page_token \\ nil) do
+    url = 
+      "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=#{playlist_id}&key=#{System.get_env("YOUTUBE_API_KEY")}"
+      <> (if page_token, do: "&pageToken=#{page_token}", else: "")
+
     {:ok, %Finch.Response{status: 200, body: body}} =
-      Finch.build(
-        :get,
-        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=100&playlistId=#{playlist_id}&key=#{System.get_env("YOUTUBE_API_KEY")}"
-      )
+      Finch.build(:get, url)
       |> Finch.request(Ngobrolin.Finch)
+
+    # Parse the body and extract the nextPageToken
+    # Then call this function recursively with the nextPageToken to get more results
 
     body
   end

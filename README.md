@@ -1,5 +1,12 @@
 # Ngobrolin
 
+## TODO
+
+- [ ] Show episodes in /
+- [ ] Admin site for managing Episodes
+- [ ] How to get all youtube videos from playlist? 
+- [x] Schedule insert data youtube to database
+
 To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies
