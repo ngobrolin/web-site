@@ -44,3 +44,5 @@ npm-debug.log
 .elixir-tools
 
 .direnv/
+
+.DS_Store
