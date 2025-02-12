@@ -35,14 +35,7 @@ ngobrolin-*.tar
 npm-debug.log
 /assets/node_modules/
 
-# Database files
-*.db
-*.db-*
-
-
 .envrc
-.elixir-tools
-
-.direnv/
-
 .DS_Store
+
+.tmp/
