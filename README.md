@@ -23,29 +23,38 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 
 - [x] Initial Phoenix application setup
 - [x] Next.js reference implementation
+- [x] Episode schema and LiveView setup
+- [x] Basic Episode CRUD operations
 - [ ] Phoenix main page layout
-- [ ] Episode directory implementation
 - [ ] Search functionality
 - [ ] Navigation and routing
+- [ ] Styling and UI components
+
+## Latest Changes
+
+- Added Episode schema with fields: title, description, thumbnail_url, duration, published_at, youtube_id, view_count, and status
+- Generated LiveView components for Episode listing and management
+- Set up database migrations for episodes table
+- Configured Episode routes in the router
 
 ## TODO
 
-1. Create Phoenix layout template
-2. Implement navigation bar
-3. Build episode directory component
-4. Add footer with social links
-5. Configure TailwindCSS with custom theme
-6. Set up episode data structure
-7. Implement search functionality
+1. Implement episode grid layout component
+2. Add thumbnail preview and YouTube video integration
+3. Style episode cards according to the design
+4. Add search and filtering functionality
+5. Implement episode detail page with video player
+6. Add pagination for episode listing
+7. Create navigation bar with search
+8. Add footer with social links
 
 ## Development
-
-TBD: Add development setup instructions
 
 To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+  * Run `mix ecto.migrate` to apply database migrations
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 

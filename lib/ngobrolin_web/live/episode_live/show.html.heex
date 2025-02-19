@@ -1,0 +1,17 @@
+<.header>
+  Episode {@episode.id}
+  <:subtitle>This is a episode record from your database.</:subtitle>
+</.header>
+
+<.list>
+  <:item title="Title">{@episode.title}</:item>
+  <:item title="Description">{@episode.description}</:item>
+  <:item title="Thumbnail url">{@episode.thumbnail_url}</:item>
+  <:item title="Duration">{@episode.duration}</:item>
+  <:item title="Published at">{@episode.published_at}</:item>
+  <:item title="Youtube">{@episode.youtube_id}</:item>
+  <:item title="View count">{@episode.view_count}</:item>
+  <:item title="Status">{@episode.status}</:item>
+</.list>
+
+<.back navigate={~p"/episodes"}>Back to episodes</.back>

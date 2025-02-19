@@ -18,7 +18,8 @@ defmodule NgobrolinWeb.Router do
     pipe_through :browser
 
     live "/", HomeLive
-    # Add other routes...
+    live "/episodes", EpisodeLive.Index, :index
+    live "/episodes/:id", EpisodeLive.Show, :show
   end
 
   # Other scopes may use custom stacks.
