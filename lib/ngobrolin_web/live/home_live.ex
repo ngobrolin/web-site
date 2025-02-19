@@ -1,11 +1,12 @@
 defmodule NgobrolinWeb.HomeLive do
   use NgobrolinWeb, :live_view
+  alias Ngobrolin.Content
 
   def mount(_params, _session, socket) do
     {:ok,
      assign(socket,
-       page_title: "Home",
-       episodes: mock_episodes()
+       page_title: "Indeks",
+       episodes: Content.list_episodes()
      )}
   end
 
@@ -52,14 +53,18 @@ defmodule NgobrolinWeb.HomeLive do
           >
             <article>
               <div class="relative aspect-video bg-[#a76ab7]">
-                <img src={episode.thumbnail} alt={episode.title} class="object-cover w-full h-full" />
+                <img
+                  src={episode.thumbnail_url}
+                  alt={episode.title}
+                  class="object-cover w-full h-full"
+                />
                 <div class="absolute bottom-0 right-0 px-3 py-1 m-2 text-sm font-bold bg-[#6587ff]">
-                  {episode.duration}
+                  {format_duration(episode.duration)}
                 </div>
               </div>
               <div class="p-4">
                 <p class="mb-2 text-sm font-bold text-[#a76ab7]">
-                  EP {episode.episode_number} • {episode.date}
+                  {format_date(episode.published_at)}
                 </p>
                 <h2 class="mb-2 text-xl font-bold">{episode.title}</h2>
                 <p class="text-sm text-gray-300">{episode.description}</p>
@@ -70,26 +75,23 @@ defmodule NgobrolinWeb.HomeLive do
       </div>
 
       <div class="flex justify-center mt-8">
-        <button class="px-8 py-6 text-lg font-bold border-4 hover:bg-[#6587ff] border-[#6587ff] bg-transparent rounded-md">
+        <.link
+          href={~p"/episodes"}
+          class="px-8 py-6 text-lg font-bold border-4 hover:bg-[#6587ff] border-[#6587ff] bg-transparent rounded-md"
+        >
           SEMUA EPISODE
-        </button>
+        </.link>
       </div>
     </div>
     """
   end
 
-  defp mock_episodes do
-    [
-      %{
-        id: "1",
-        title: "Masa Depan Pengembangan Web",
-        description: "Mengeksplorasi tren dan teknologi yang akan datang dalam pengembangan web",
-        episode_number: 1,
-        date: "15 Jan 2024",
-        duration: "45:00",
-        thumbnail: "/images/ep1.jpg"
-      }
-      # Add more mock episodes...
-    ]
+  defp format_duration(seconds) do
+    minutes = div(seconds, 60)
+    "#{minutes} menit"
+  end
+
+  defp format_date(naive_datetime) do
+    Calendar.strftime(naive_datetime, "%d %b %Y")
   end
 end
