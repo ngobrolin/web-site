@@ -17,7 +17,8 @@ defmodule NgobrolinWeb.Router do
   scope "/", NgobrolinWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", HomeLive
+    # Add other routes...
   end
 
   # Other scopes may use custom stacks.

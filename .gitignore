@@ -39,3 +39,6 @@ npm-debug.log
 .DS_Store
 
 .tmp/
+
+docs/v0-ngobrolin-web
+docs/bolt-ngobrolin-web*
