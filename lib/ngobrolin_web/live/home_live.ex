@@ -1,6 +1,7 @@
 defmodule NgobrolinWeb.HomeLive do
   use NgobrolinWeb, :live_view
   alias Ngobrolin.Content
+  import NgobrolinWeb.ViewHelpers, only: [format_duration: 1, format_date: 1]
 
   def mount(_params, _session, socket) do
     {:ok,
@@ -84,14 +85,5 @@ defmodule NgobrolinWeb.HomeLive do
       </div>
     </div>
     """
-  end
-
-  defp format_duration(seconds) do
-    minutes = div(seconds, 60)
-    "#{minutes} menit"
-  end
-
-  defp format_date(naive_datetime) do
-    Calendar.strftime(naive_datetime, "%d %b %Y")
   end
 end
