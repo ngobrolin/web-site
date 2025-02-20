@@ -45,7 +45,7 @@ defmodule NgobrolinWeb.HomeLive do
         </button>
       </div>
 
-      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
         <%= for episode <- @episodes do %>
           <.link
             href={~p"/episodes/#{episode.id}"}
