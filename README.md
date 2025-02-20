@@ -48,6 +48,7 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 - Enhanced typography with brand colors and font weights
 - Reorganized episode detail layout for better visual hierarchy
 - Updated action buttons to match global design pattern
+- Localized UI text to Bahasa Indonesia for better user experience
 
 ## TODO
 
