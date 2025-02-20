@@ -67,6 +67,10 @@ episodes = [
   }
 ]
 
-Enum.each(episodes, fn episode ->
-  Repo.insert!(Episode.changeset(%Episode{}, episode))
+Enum.with_index(episodes, 1)
+|> Enum.each(fn {episode, index} ->
+  episode
+  |> Map.put(:episode_number, index)
+  |> then(&Episode.changeset(%Episode{}, &1))
+  |> Repo.insert!()
 end)

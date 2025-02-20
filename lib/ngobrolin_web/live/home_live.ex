@@ -6,7 +6,7 @@ defmodule NgobrolinWeb.HomeLive do
     {:ok,
      assign(socket,
        page_title: "Indeks",
-       episodes: Content.list_episodes()
+       episodes: Content.list_episodes() |> Enum.sort_by(& &1.episode_number, :desc)
      )}
   end
 
@@ -63,8 +63,8 @@ defmodule NgobrolinWeb.HomeLive do
                 </div>
               </div>
               <div class="p-4">
-                <p class="mb-2 text-sm font-bold text-[#a76ab7]">
-                  {format_date(episode.published_at)}
+                <p className="mb-2 text-sm font-bold text-[#a76ab7]">
+                  EP {episode.episode_number} • {format_date(episode.published_at)}
                 </p>
                 <h2 class="mb-2 text-xl font-bold">{episode.title}</h2>
                 <p class="text-sm text-gray-300">{episode.description}</p>

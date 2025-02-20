@@ -25,6 +25,7 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 - [x] Next.js reference implementation
 - [x] Episode schema and LiveView setup
 - [x] Basic Episode CRUD operations
+- [x] Add episode number with auto-increment
 - [ ] Phoenix main page layout
 - [ ] Search functionality
 - [ ] Navigation and routing
@@ -32,7 +33,8 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 
 ## Latest Changes
 
-- Added Episode schema with fields: title, description, thumbnail_url, duration, published_at, youtube_id, view_count, and status
+- Added Episode schema with fields: title, description, thumbnail_url, duration, published_at, youtube_id, view_count, status, and episode_number
+- Implemented auto-incrementing episode numbers for new episodes
 - Generated LiveView components for Episode listing and management
 - Set up database migrations for episodes table
 - Configured Episode routes in the router
