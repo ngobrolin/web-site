@@ -1,17 +1,66 @@
-<.header>
-  Episode {@episode.id}
-  <:subtitle>This is a episode record from your database.</:subtitle>
-</.header>
+<div class="min-h-screen bg-[#1a203b] text-white">
+  <div class="container px-4 py-8 mx-auto">
+    <.header class="mb-10">
+      <div class="flex flex-col gap-2">
+        <p class="text-sm font-bold text-[#a76ab7]">
+          EP {@episode.episode_number} • {@episode.published_at}
+        </p>
+        <h2 class="text-4xl font-black tracking-tighter text-[#6587ff]">{@episode.title}</h2>
+        <div class="flex items-center gap-4 text-sm text-gray-300">
+          <span>
+            <.icon name="hero-eye" class="w-4 h-4 inline mr-1" /> {@episode.view_count} views
+          </span>
+          <span>
+            <.icon name="hero-clock" class="w-4 h-4 inline mr-1" /> {@episode.duration}
+          </span>
+        </div>
+      </div>
+    </.header>
 
-<.list>
-  <:item title="Title">{@episode.title}</:item>
-  <:item title="Description">{@episode.description}</:item>
-  <:item title="Thumbnail url">{@episode.thumbnail_url}</:item>
-  <:item title="Duration">{@episode.duration}</:item>
-  <:item title="Published at">{@episode.published_at}</:item>
-  <:item title="Youtube">{@episode.youtube_id}</:item>
-  <:item title="View count">{@episode.view_count}</:item>
-  <:item title="Status">{@episode.status}</:item>
-</.list>
+    <div>
+      <!-- Video Player -->
+      <div class="border-4 border-[#6587ff] rounded-md overflow-hidden mb-8">
+        <div class="relative pb-[56.25%] h-0">
+          <lite-youtube
+            videoid={@episode.youtube_id}
+            class="absolute top-0 left-0 w-full h-full"
+            params="rel=0"
+          />
+        </div>
+      </div>
+      
+<!-- Show Notes -->
+      <div class="border-4 border-[#6587ff] rounded-md p-6 mb-8">
+        <h2 class="text-2xl font-black tracking-tighter mb-4">Show Notes</h2>
+        <div class="text-gray-300 leading-relaxed whitespace-pre-wrap">
+          {@episode.description}
+        </div>
+      </div>
+      
+<!-- Share Buttons -->
+      <div class="flex gap-4">
+        <button class="px-8 py-6 text-lg font-bold border-4 hover:bg-[#6587ff] border-[#6587ff] bg-transparent rounded-md">
+          <div class="flex items-center gap-2">
+            <.icon name="hero-share" class="w-5 h-5" />
+            <span>SHARE</span>
+          </div>
+        </button>
+        <button class="px-8 py-6 text-lg font-bold border-4 hover:bg-[#a76ab7] border-[#a76ab7] bg-transparent rounded-md">
+          <div class="flex items-center gap-2">
+            <.icon name="hero-chat-bubble-left" class="w-5 h-5" />
+            <span>COMMENT</span>
+          </div>
+        </button>
+      </div>
+    </div>
 
-<.back navigate={~p"/episodes"}>Back to episodes</.back>
+    <div class="mt-8">
+      <.link
+        navigate={~p"/"}
+        class="px-8 py-6 text-lg font-bold border-4 hover:bg-[#6587ff] border-[#6587ff] bg-transparent rounded-md inline-flex items-center gap-2"
+      >
+        <.icon name="hero-arrow-left" class="w-5 h-5" /> SEMUA EPISODE
+      </.link>
+    </div>
+  </div>
+</div>

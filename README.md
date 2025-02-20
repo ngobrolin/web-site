@@ -26,10 +26,11 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 - [x] Episode schema and LiveView setup
 - [x] Basic Episode CRUD operations
 - [x] Add episode number with auto-increment
+- [x] Episode detail page with video player
+- [x] Consistent styling between Phoenix and Next.js implementations
 - [ ] Phoenix main page layout
 - [ ] Search functionality
 - [ ] Navigation and routing
-- [ ] Styling and UI components
 
 ## Latest Changes
 
@@ -38,17 +39,25 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 - Generated LiveView components for Episode listing and management
 - Set up database migrations for episodes table
 - Configured Episode routes in the router
+- Enhanced episode detail page with video player, show notes, and social sharing
+- Added view count tracking for episodes
+- Improved episode detail page layout and responsiveness
+- Integrated lite-youtube-embed for better video performance
+- Updated episode detail page styling to match home page design system
+- Implemented consistent border styles and color scheme across pages
+- Enhanced typography with brand colors and font weights
+- Reorganized episode detail layout for better visual hierarchy
+- Updated action buttons to match global design pattern
 
 ## TODO
 
-1. Implement episode grid layout component
-2. Add thumbnail preview and YouTube video integration
-3. Style episode cards according to the design
-4. Add search and filtering functionality
-5. Implement episode detail page with video player
-6. Add pagination for episode listing
-7. Create navigation bar with search
-8. Add footer with social links
+1. Add persistent mini-player while scrolling
+2. Implement search and filtering functionality
+3. Implement pagination for episode listing
+4. Create navigation bar with search
+5. Add footer with social links
+6. Implement related episodes recommendations
+7. Add comment section functionality
 
 ## Development
 
