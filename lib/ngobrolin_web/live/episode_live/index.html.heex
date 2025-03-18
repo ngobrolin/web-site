@@ -1,23 +1,48 @@
-<.header>
-  Listing Episodes
-</.header>
+<div class="container px-4 py-8 mx-auto">
+  <h1 class="text-4xl font-black tracking-tighter transform -rotate-1 shadow-[4px_4px_0px_0px_#ffffff] inline-block mb-12">
+    SEMUA EPISODE
+  </h1>
 
-<.table
-  id="episodes"
-  rows={@streams.episodes}
-  row_click={fn {_id, episode} -> JS.navigate(~p"/episodes/#{episode}") end}
->
-  <:col :let={{_id, episode}} label="Title">{episode.title}</:col>
-  <:col :let={{_id, episode}} label="Description">{episode.description}</:col>
-  <:col :let={{_id, episode}} label="Thumbnail url">{episode.thumbnail_url}</:col>
-  <:col :let={{_id, episode}} label="Duration">{episode.duration}</:col>
-  <:col :let={{_id, episode}} label="Published at">{episode.published_at}</:col>
-  <:col :let={{_id, episode}} label="Youtube">{episode.youtube_id}</:col>
-  <:col :let={{_id, episode}} label="View count">{episode.view_count}</:col>
-  <:col :let={{_id, episode}} label="Status">{episode.status}</:col>
-  <:action :let={{_id, episode}}>
-    <div class="sr-only">
-      <.link navigate={~p"/episodes/#{episode}"}>Show</.link>
+  <!-- Search Bar -->
+  <div class="flex items-center gap-4 mb-12">
+    <div class="relative flex-1">
+      <input
+            type="text"
+            placeholder="Cari episode..."
+            class="w-full pl-4 text-lg border-4 border-white bg-zinc-800 placeholder:text-zinc-500 py-3 transition-all focus:bg-white focus:text-zinc-900 focus:outline-none focus:border-white hover:bg-white hover:text-zinc-900 hover:placeholder:text-zinc-700"
+          />
     </div>
-  </:action>
-</.table>
+    <button class="px-8 py-3 text-lg font-bold border-4 hover:bg-white hover:text-zinc-900 border-white bg-transparent transform transition-transform hover:scale-105">
+      CARI
+    </button>
+  </div>
+
+  <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+    <%= for {_id, episode} <- @streams.episodes do %>
+      <.link
+        href={~p"/episodes/#{episode}"}
+        class="block overflow-hidden transition-transform border-4 border-white hover:scale-[1.02]"
+      >
+        <article class="bg-zinc-800 h-full">
+          <div class="relative aspect-video">
+            <img
+              src={episode.thumbnail_url}
+              alt={episode.title}
+              class="object-cover w-full h-full"
+            />
+            <div class="absolute bottom-0 right-0 px-3 py-1 m-2 text-sm font-bold bg-white text-zinc-900">
+              {episode.duration}
+            </div>
+          </div>
+          <div class="p-4">
+            <p class="mb-2 text-sm font-bold text-zinc-300">
+              EP {episode.episode_number} • {episode.published_at}
+            </p>
+            <h2 class="mb-2 text-xl font-bold">{episode.title}</h2>
+            <p class="text-sm text-zinc-300 line-clamp-2">{episode.description}</p>
+          </div>
+        </article>
+      </.link>
+    <% end %>
+  </div>
+</div>

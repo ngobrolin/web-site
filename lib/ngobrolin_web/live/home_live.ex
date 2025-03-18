@@ -14,71 +14,70 @@ defmodule NgobrolinWeb.HomeLive do
   def render(assigns) do
     ~H"""
     <div class="container px-4 py-8 mx-auto">
-      <section class="mb-12">
-        <h1 class="mb-4 text-6xl font-black tracking-tighter">
-          NGOBROLIN<br />WEB.
-        </h1>
-        <p class="max-w-2xl text-xl text-[#a76ab7]">
-          Diskusi dan ngobrol ngalor-ngidul tentang dunia web. Agar pengetahuan kita tetap terbarukan dengan teknologi web terkini.
-        </p>
+      <!-- Hero Section -->
+      <section class="relative h-[50vh] mb-12 overflow-hidden">
+        <div class="absolute inset-0 bg-zinc-800 border-4 border-white transform -rotate-1"></div>
+        <div class="absolute inset-0 flex flex-col items-start justify-center px-12">
+          <h1 class="mb-4 text-6xl font-black tracking-tighter transform rotate-1 shadow-[4px_4px_0px_0px_#ffffff]">
+            NGOBROLIN<br />WEB.
+          </h1>
+          <p class="max-w-2xl text-xl font-bold bg-white text-zinc-900 px-4 py-2 transform -rotate-1">
+            Diskusi dan ngobrol ngalor-ngidul tentang dunia web.
+          </p>
+        </div>
       </section>
-
-      <div class="flex items-center gap-4 mb-8">
+      
+    <!-- Search Bar -->
+      <div class="flex items-center gap-4 mb-12">
         <div class="relative flex-1">
-          <svg
-            class="absolute w-5 h-5 transform -translate-y-1/2 left-3 top-1/2 text-[#6587ff]"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.3-4.3" />
-          </svg>
           <input
             type="text"
             placeholder="Cari episode..."
-            class="w-full pl-10 text-lg border-4 border-[#6587ff] bg-[#1a203b] placeholder:text-gray-500 rounded-md"
+            class="w-full pl-4 text-lg border-4 border-white bg-zinc-800 placeholder:text-zinc-500 py-3 transition-all focus:bg-white focus:text-zinc-900 focus:outline-none focus:border-white hover:bg-white hover:text-zinc-900 hover:placeholder:text-zinc-700"
           />
         </div>
-        <button class="px-8 py-6 text-lg font-bold border-4 hover:bg-[#6587ff] border-[#6587ff] bg-transparent rounded-md">
+        <button class="px-8 py-3 text-lg font-bold border-4 hover:bg-white hover:text-zinc-900 border-white bg-transparent transform transition-transform hover:scale-105">
           CARI
         </button>
       </div>
-
+      
+    <!-- Episodes Grid -->
+      <h2 class="text-3xl font-black mb-8 inline-block transform -rotate-1 border-b-4 border-white pb-2">
+        EPISODE TERBARU
+      </h2>
       <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
         <%= for episode <- @episodes do %>
           <.link
             href={~p"/episodes/#{episode.id}"}
-            class="block overflow-hidden transition-transform border-4 border-[#6587ff] hover:scale-[1.02]"
+            class="block overflow-hidden transition-transform border-4 border-white hover:scale-[1.02]"
           >
-            <article>
-              <div class="relative aspect-video bg-[#a76ab7]">
+            <article class="bg-zinc-800 h-full">
+              <div class="relative aspect-video">
                 <img
                   src={episode.thumbnail_url}
                   alt={episode.title}
                   class="object-cover w-full h-full"
                 />
-                <div class="absolute bottom-0 right-0 px-3 py-1 m-2 text-sm font-bold bg-[#6587ff]">
+                <div class="absolute bottom-0 right-0 px-3 py-1 m-2 text-sm font-bold bg-white text-zinc-900">
                   {format_duration(episode.duration)}
                 </div>
               </div>
               <div class="p-4">
-                <p className="mb-2 text-sm font-bold text-[#a76ab7]">
+                <p class="mb-2 text-sm font-bold text-zinc-300">
                   EP {episode.episode_number} • {format_date(episode.published_at)}
                 </p>
                 <h2 class="mb-2 text-xl font-bold">{episode.title}</h2>
-                <p class="text-sm text-gray-300">{episode.description}</p>
+                <p class="text-sm text-zinc-300">{episode.description}</p>
               </div>
             </article>
           </.link>
         <% end %>
       </div>
 
-      <div class="flex justify-center mt-8">
+      <div class="flex justify-center mt-12">
         <.link
           href={~p"/episodes"}
-          class="px-8 py-6 text-lg font-bold border-4 hover:bg-[#6587ff] border-[#6587ff] bg-transparent rounded-md"
+          class="px-8 py-3 text-lg font-bold border-4 hover:bg-white hover:text-zinc-900 border-white transform transition-transform hover:scale-105"
         >
           SEMUA EPISODE
         </.link>
