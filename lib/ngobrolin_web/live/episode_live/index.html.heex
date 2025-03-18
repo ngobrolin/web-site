@@ -4,18 +4,21 @@
   </h1>
 
   <!-- Search Bar -->
-  <div class="flex items-center gap-4 mb-12">
+  <form phx-submit="search" class="flex items-center gap-4 mb-12">
     <div class="relative flex-1">
       <input
             type="text"
+            name="search_term"
+            value={@search_term}
+            phx-change="search-input"
             placeholder="Cari episode..."
             class="w-full pl-4 text-lg border-4 border-white bg-zinc-800 placeholder:text-zinc-500 py-3 transition-all focus:bg-white focus:text-zinc-900 focus:outline-none focus:border-white hover:bg-white hover:text-zinc-900 hover:placeholder:text-zinc-700"
           />
     </div>
-    <button class="px-8 py-3 text-lg font-bold border-4 hover:bg-white hover:text-zinc-900 border-white bg-transparent transform transition-transform hover:scale-105">
+    <button type="submit" class="px-8 py-3 text-lg font-bold border-4 hover:bg-white hover:text-zinc-900 border-white bg-transparent transform transition-transform hover:scale-105">
       CARI
     </button>
-  </div>
+  </form>
 
   <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
     <%= for {_id, episode} <- @streams.episodes do %>
@@ -45,4 +48,17 @@
       </.link>
     <% end %>
   </div>
+  
+  <%= if @streams.episodes == %{} do %>
+    <div class="text-center py-16 border-4 border-white mt-8">
+      <h3 class="text-2xl font-bold mb-4">Tidak ada episode yang ditemukan</h3>
+      <p class="mb-8">Coba cari dengan kata kunci lain atau hapus pencarian</p>
+      <button 
+        phx-click="search" 
+        phx-value-search_term=""
+        class="px-8 py-3 text-lg font-bold border-4 hover:bg-white hover:text-zinc-900 border-white bg-transparent transform transition-transform hover:scale-105">
+        RESET PENCARIAN
+      </button>
+    </div>
+  <% end %>
 </div>

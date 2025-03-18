@@ -28,9 +28,9 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 - [x] Add episode number with auto-increment
 - [x] Episode detail page with video player
 - [x] Consistent styling between Phoenix and Next.js implementations
-- [ ] Phoenix main page layout
-- [ ] Search functionality
-- [ ] Navigation and routing
+- [x] Phoenix main page layout
+- [x] Search functionality
+- [x] Navigation and routing
 
 ## Latest Changes
 
