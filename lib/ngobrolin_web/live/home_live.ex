@@ -27,7 +27,7 @@ defmodule NgobrolinWeb.HomeLive do
         </div>
       </section>
       
-    <!-- Search Bar -->
+    <!-- Search Bar 
       <div class="flex items-center gap-4 mb-12">
         <div class="relative flex-1">
           <input
@@ -40,7 +40,7 @@ defmodule NgobrolinWeb.HomeLive do
           CARI
         </button>
       </div>
-      
+     -->
     <!-- Episodes Grid -->
       <h2 class="text-3xl font-black mb-8 inline-block transform -rotate-1 border-b-4 border-white pb-2">
         EPISODE TERBARU
