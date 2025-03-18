@@ -83,6 +83,37 @@
 		Closed captions
 		Alt text for images
 		High contrast mode
+	### 5.4 Design System - Neo Brutalism
+		#### Visual Style
+			Neo-brutalist design with intentional raw aesthetic
+			Bold, unpolished elements with high contrast
+			Thick white borders (4px) around interactive elements
+			Geometric shapes with subtle rotation effects (-1 to 1 degree)
+			Text shadow effects (4px offset white shadows) for emphasis
+		
+		#### Color Palette
+			Background: Dark (#1a203b / zinc-800)
+			Primary elements: White borders and text
+			Accent elements: Black text on white backgrounds
+			Minimal use of additional colors
+			
+		#### Typography
+			Headings: Extra bold/black weight, uppercase, tracking-tighter
+			Minor text rotation for visual interest
+			System sans-serif fonts optimized for readability
+			Strong hierarchy with font weight and size
+			
+		#### Interactive Elements
+			Dramatic hover states (dark to white color inversions)
+			Scale transitions on hover (1.02-1.05×)
+			Bold border-focused design
+			Transformative hover effects
+			
+		#### Layout
+			Grid-based system with generous spacing
+			Intentional asymmetry with rotational elements
+			Strong container borders
+			Full-bleed images contained in bordered elements
 ## 6. Future Considerations
 	Member-only content system
 	Newsletter integration
