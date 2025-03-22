@@ -3,10 +3,10 @@ defmodule Ngobrolin.Youtube.Fetcher do
     Fetches YouTube video data from playlist id with YouTube API v3.
   """
 
-  def fetch_videos(playlist_id) do
-    api_key = Application.get_env(:ngobrolin, :youtube_api_key)
+  def fetch_videos(playlist_id, opts \\ []) do
+    api_key = Keyword.get(opts, :api_key, Application.get_env(:ngobrolin, :youtube_api_key))
+    http_client = Keyword.get(opts, :http_client, &default_http_client/2)
     url = "https://www.googleapis.com/youtube/v3/playlistItems"
-    dbg(api_key)
 
     params =
       URI.encode_query(%{
@@ -18,8 +18,8 @@ defmodule Ngobrolin.Youtube.Fetcher do
 
     full_url = "#{url}?#{params}"
 
-    case Finch.build(:get, full_url, []) |> Finch.request(Ngobrolin.Finch) do
-      {:ok, %Finch.Response{status: 200, body: body}} ->
+    case http_client.(full_url, []) do
+      {:ok, %{status: 200, body: body}} ->
         parse_response(Jason.decode!(body))
 
       {:error, reason} ->
@@ -36,5 +36,17 @@ defmodule Ngobrolin.Youtube.Fetcher do
         video_id: item["snippet"]["resourceId"]["videoId"]
       }
     end)
+  end
+
+  defp default_http_client(url, headers) do
+    Finch.build(:get, url, headers)
+    |> Finch.request(Ngobrolin.Finch)
+    |> case do
+      {:ok, %Finch.Response{status: status, body: body}} ->
+        {:ok, %{status: status, body: body}}
+
+      error ->
+        error
+    end
   end
 end
