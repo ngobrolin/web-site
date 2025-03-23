@@ -52,6 +52,10 @@ defmodule Ngobrolin.Youtube do
     video_ids = Enum.map(videos, & &1.video_id)
     # Check if the video_ids are already in the database
     existing_video_ids = Ngobrolin.Repo.all(from e in Episode, select: e.youtube_id)
+    # Fetch durations for the videos
+    api_key = Application.get_env(:ngobrolin, :youtube_api_key)
+    http_client = &default_http_client/2
+    durations_map = fetch_video_durations(video_ids, api_key, http_client)
     # Filter out the video_ids that are already in the database
     new_video_ids = video_ids -- existing_video_ids
     # Insert new videos into the database
@@ -63,12 +67,49 @@ defmodule Ngobrolin.Youtube do
         title: video.title,
         description: video.description,
         thumbnail_url: video.thumbnail,
-        published_at: video.published_at
+        published_at: video.published_at,
+        duration: Map.get(durations_map, video.video_id)
       })
     end)
 
     # Return the list of new video_ids
     new_video_ids
+  end
+
+  defp fetch_video_durations(video_ids, api_key, http_client) do
+    url = "https://www.googleapis.com/youtube/v3/videos"
+
+    params =
+      URI.encode_query(%{part: "contentDetails", id: Enum.join(video_ids, ","), key: api_key})
+
+    full_url = "#{url}?#{params}"
+
+    with {:ok, %{status: 200, body: body}} <- http_client.(full_url, []),
+         %{"items" => items} <- Jason.decode!(body) do
+      Enum.reduce(items, %{}, fn item, acc ->
+        Map.put(acc, item["id"], parse_duration(item["contentDetails"]["duration"]))
+      end)
+    else
+      _ -> %{}
+    end
+  end
+
+  defp parse_duration(nil), do: 0
+  defp parse_duration(""), do: 0
+
+  defp parse_duration(duration_string) do
+    # Converts e.g. "PT1H30M4S" to integer seconds
+    regex = ~r/^PT((?<hours>\d+)H)?((?<minutes>\d+)M)?((?<seconds>\d+)S)?$/
+
+    case Regex.named_captures(regex, duration_string) do
+      nil ->
+        0
+
+      %{"hours" => h, "minutes" => m, "seconds" => s} ->
+        String.to_integer(if h == "", do: "0", else: h) * 3600 +
+          String.to_integer(if m == "", do: "0", else: m) * 60 +
+          String.to_integer(if s == "", do: "0", else: s)
+    end
   end
 
   defp default_http_client(url, headers) do
