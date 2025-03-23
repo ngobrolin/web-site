@@ -9,21 +9,33 @@ defmodule Ngobrolin.Youtube do
   def fetch_videos(playlist_id, opts \\ []) do
     api_key = Keyword.get(opts, :api_key, Application.get_env(:ngobrolin, :youtube_api_key))
     http_client = Keyword.get(opts, :http_client, &default_http_client/2)
+    do_fetch_videos(playlist_id, api_key, http_client)
+  end
+
+  defp do_fetch_videos(playlist_id, api_key, http_client, page_token \\ nil, acc \\ []) do
     url = "https://www.googleapis.com/youtube/v3/playlistItems"
 
     params =
       URI.encode_query(%{
         part: "snippet,contentDetails",
-        maxResults: 150,
         playlistId: playlist_id,
-        key: api_key
+        maxResults: 50,
+        key: api_key,
+        pageToken: page_token
       })
 
     full_url = "#{url}?#{params}"
 
     case http_client.(full_url, []) do
       {:ok, %{status: 200, body: body}} ->
-        parse_response(Jason.decode!(body))
+        data = Jason.decode!(body)
+        items = parse_response(data)
+        next_token = Map.get(data, "nextPageToken")
+        new_acc = acc ++ items
+
+        if next_token,
+          do: do_fetch_videos(playlist_id, api_key, http_client, next_token, new_acc),
+          else: new_acc
 
       {:error, reason} ->
         {:error, reason}
