@@ -15,9 +15,9 @@ defmodule NgobrolinWeb.HomeLive do
 
   def render(assigns) do
     ~H"""
-    <div class="container px-4 py-8 mx-auto">
+    <div class="container px-4 py-4 mx-auto">
       <!-- Hero Section -->
-      <section class="relative h-[50vh] mb-12 overflow-hidden">
+      <section class="relative h-[50vh] mb-6 overflow-hidden">
         <div class="absolute inset-0 bg-zinc-800 border-4 border-white transform -rotate-1"></div>
         <div class="absolute inset-0 flex flex-col items-start justify-center px-12">
           <h1 class="mb-4 text-6xl font-black tracking-tighter transform rotate-1 shadow-[4px_4px_0px_0px_#ffffff]">
