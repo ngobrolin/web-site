@@ -9,7 +9,7 @@ defmodule NgobrolinWeb.HomeLive do
     {:ok,
      assign(socket,
        page_title: "Indeks",
-       episodes: Content.list_episodes(30)
+       episodes: Content.list_episodes(%{limit: 30})
      )}
   end
 
