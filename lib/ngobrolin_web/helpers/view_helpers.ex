@@ -1,10 +1,22 @@
 defmodule NgobrolinWeb.ViewHelpers do
   def format_duration(seconds) do
-    minutes = div(seconds, 60)
-    "#{minutes} menit"
+    case seconds do
+      nil ->
+        "0 detik"
+
+      sec ->
+        minutes = div(sec, 60)
+        "#{minutes} menit"
+    end
   end
 
   def format_date(naive_datetime) do
-    Calendar.strftime(naive_datetime, "%d %b %Y")
+    case naive_datetime do
+      nil ->
+        "Tanggal tidak tersedia"
+
+      _ ->
+        Calendar.strftime(naive_datetime, "%d %b %Y")
+    end
   end
 end
