@@ -10,7 +10,7 @@ defmodule NgobrolinWeb.AboutLive do
     <div class="bg-zinc-900 min-h-screen">
       <div class="container mx-auto px-4 py-12">
         <h1 class="text-4xl font-black text-center text-white uppercase tracking-tighter mb-12 transform -rotate-1">
-          TENTANG NGOBROLIN
+          TENTANG NGOBROLIN WEB
         </h1>
 
         <section class="mb-16">
