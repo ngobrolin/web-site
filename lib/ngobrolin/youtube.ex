@@ -1,4 +1,4 @@
-defmodule Ngobrolin.Youtube.Fetcher do
+defmodule Ngobrolin.Youtube do
   @moduledoc """
     Fetches YouTube video data from playlist id with YouTube API v3.
   """

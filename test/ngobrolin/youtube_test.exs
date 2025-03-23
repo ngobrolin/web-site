@@ -1,8 +1,7 @@
-defmodule Ngobrolin.YouTube.FetcherTest do
+defmodule Ngobrolin.YouTubeTest do
   use ExUnit.Case, async: true
 
-  alias Ngobrolin.YouTube.Fetcher
-  alias Ngobrolin.Youtube.Fetcher
+  alias Ngobrolin.Youtube
 
   describe "Fetcher" do
     test "parse_response/1" do
@@ -28,7 +27,7 @@ defmodule Ngobrolin.YouTube.FetcherTest do
         }
       ]
 
-      assert Fetcher.parse_response(response) == expected
+      assert Youtube.parse_response(response) == expected
     end
 
     test "get_videos/1" do
@@ -52,7 +51,7 @@ defmodule Ngobrolin.YouTube.FetcherTest do
       end
 
       result =
-        Fetcher.fetch_videos(playlist_id, http_client: mock_http_client, api_key: "fake_key")
+        Youtube.fetch_videos(playlist_id, http_client: mock_http_client, api_key: "fake_key")
 
       # Assert the result
       assert result == [
