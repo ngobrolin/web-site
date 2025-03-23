@@ -13,7 +13,7 @@ defmodule Ngobrolin.Youtube do
 
     params =
       URI.encode_query(%{
-        part: "snippet",
+        part: "snippet,contentDetails",
         maxResults: 150,
         playlistId: playlist_id,
         key: api_key
@@ -32,11 +32,16 @@ defmodule Ngobrolin.Youtube do
 
   def parse_response(%{"items" => items}) do
     Enum.map(items, fn item ->
+      published_at =
+        item["contentDetails"]["videoPublishedAt"]
+        |> NaiveDateTime.from_iso8601!()
+
       %{
         title: item["snippet"]["title"],
         description: item["snippet"]["description"],
         thumbnail: item["snippet"]["thumbnails"]["standard"]["url"],
-        video_id: item["snippet"]["resourceId"]["videoId"]
+        video_id: item["snippet"]["resourceId"]["videoId"],
+        published_at: published_at
       }
     end)
   end
@@ -57,7 +62,8 @@ defmodule Ngobrolin.Youtube do
         youtube_id: video.video_id,
         title: video.title,
         description: video.description,
-        thumbnail_url: video.thumbnail
+        thumbnail_url: video.thumbnail,
+        published_at: video.published_at
       })
     end)
 

@@ -2,6 +2,7 @@ defmodule NgobrolinWeb.EpisodeLive.Index do
   use NgobrolinWeb, :live_view
 
   alias Ngobrolin.Content
+  import NgobrolinWeb.ViewHelpers, only: [truncate: 1, format_date: 1]
 
   @impl true
   def mount(_params, _session, socket) do
