@@ -11,6 +11,8 @@ config :ngobrolin,
   ecto_repos: [Ngobrolin.Repo],
   generators: [timestamp_type: :utc_datetime, binary_id: true]
 
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
 # Configures the endpoint
 config :ngobrolin, NgobrolinWeb.Endpoint,
   url: [host: "localhost"],
