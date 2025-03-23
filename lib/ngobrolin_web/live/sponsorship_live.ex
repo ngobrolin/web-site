@@ -9,24 +9,71 @@ defmodule NgobrolinWeb.SponsorshipLive do
     ~H"""
     <div class="container mx-auto">
       <h1 class="text-4xl font-black uppercase tracking-tighter mb-8 transform -rotate-1 bg-white text-zinc-800 inline-block px-6 py-3 border-4 border-white">
-        Sponsor Ngobrolin
+        Dukungan Untuk Ngobrolin WEB
       </h1>
 
       <section class="mb-12">
         <div class="border-4 border-white p-6 transform rotate-0.5 bg-zinc-900 mb-10">
           <h2 class="text-3xl font-extrabold uppercase mb-6 transform -rotate-0.5">
-            Mengapa Sponsor Kami?
+            Kecil nan Akrab
           </h2>
           <p class="text-xl mb-4">
-            Hubungkan dengan audiens kami yang terdiri dari profesional teknologi, penggemar, dan pengambil keputusan.
+            Komunitas Ngobrolin WEB, meski tergolong kecil namun sangat akrab. Mendengarkan podcast sembari berkendara sepulang kerja atau saat bersantai dirumah adalah cara penonton dalam menikmati acara ini.
           </p>
           <p class="text-xl">
-            Pemirsa kami aktif mencari pengetahuan dan solusi di bidang teknologi, menjadikan mereka audiens ideal
-            untuk produk dan layanan yang relevan.
+            Kami ingin menyebarkan lebih banyak informasi dan produk yang berhubungan erat dengan dunai web yang dikembangkan oleh para pengembang lokal. Dengan dukungan kamu, kami bisa menjangkau lebih banyak pendengar dan memberikan informasi yang lebih bermanfaat.
           </p>
         </div>
       </section>
-
+      <section>
+        <h2 class="text-3xl font-black text-white uppercase tracking-tighter mb-8 text-center transform -rotate-1">
+          DUKUNG KAMI
+        </h2>
+        <div class="flex flex-wrap justify-center gap-6">
+          <a
+            href="https://saweria.co/rizafahmi"
+            class="flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white font-bold uppercase border-4 border-white rounded-none hover:bg-white hover:text-zinc-900 transform transition-transform hover:scale-105"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+              />
+            </svg>
+            Donasi
+          </a>
+          <a
+            href="mailto:rizafahmi@gmail.com"
+            class="flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white font-bold uppercase border-4 border-white rounded-none hover:bg-white hover:text-zinc-900 transform transition-transform hover:scale-105"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+              />
+            </svg>
+            Bentuk Dukungan Lain
+          </a>
+        </div>
+      </section>
+      
+    <!--
       <section class="mb-12">
         <div class="border-4 border-white p-6 transform -rotate-0.5 bg-zinc-900">
           <h2 class="text-3xl font-extrabold uppercase mb-6 transform rotate-0.5">
@@ -107,6 +154,7 @@ defmodule NgobrolinWeb.SponsorshipLive do
           </form>
         </div>
       </section>
+      -->
     </div>
 
     <style>
