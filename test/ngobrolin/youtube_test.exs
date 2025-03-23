@@ -11,8 +11,11 @@ defmodule Ngobrolin.YouTubeTest do
             "snippet" => %{
               "title" => "Video Title",
               "description" => "Video Description",
-              "thumbnails" => %{"default" => %{"url" => "http://example.com/thumbnail.jpg"}},
+              "thumbnails" => %{"standard" => %{"url" => "http://example.com/thumbnail.jpg"}},
               "resourceId" => %{"videoId" => "12345"}
+            },
+            "contentDetails" => %{
+              "videoPublishedAt" => "2021-01-01T00:00:00Z"
             }
           }
         ]
@@ -23,14 +26,15 @@ defmodule Ngobrolin.YouTubeTest do
           title: "Video Title",
           description: "Video Description",
           thumbnail: "http://example.com/thumbnail.jpg",
-          video_id: "12345"
+          video_id: "12345",
+          published_at: ~N[2021-01-01 00:00:00]
         }
       ]
 
       assert Youtube.parse_response(response) == expected
     end
 
-    test "get_videos/1" do
+    test "fetch_videos/1" do
       playlist_id = "PL1234567890"
 
       mock_http_client = fn _url, _headers ->
@@ -40,8 +44,11 @@ defmodule Ngobrolin.YouTubeTest do
               "snippet" => %{
                 "title" => "Test Video",
                 "description" => "Test Description",
-                "thumbnails" => %{"default" => %{"url" => "http://example.com/thumbnail.jpg"}},
+                "thumbnails" => %{"standard" => %{"url" => "http://example.com/thumbnail.jpg"}},
                 "resourceId" => %{"videoId" => "test123"}
+              },
+              "contentDetails" => %{
+                "videoPublishedAt" => "2021-01-01T00:00:00Z"
               }
             }
           ]
@@ -59,7 +66,8 @@ defmodule Ngobrolin.YouTubeTest do
                  title: "Test Video",
                  description: "Test Description",
                  thumbnail: "http://example.com/thumbnail.jpg",
-                 video_id: "test123"
+                 video_id: "test123",
+                 published_at: ~N[2021-01-01 00:00:00]
                }
              ]
     end

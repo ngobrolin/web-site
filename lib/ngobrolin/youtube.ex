@@ -89,6 +89,16 @@ defmodule Ngobrolin.Youtube do
   end
 
   defp fetch_video_durations(video_ids, api_key, http_client) do
+    # Batch video IDs in chunks of 50 (YouTube API limit)
+    video_ids
+    |> chunk_video_ids(50)
+    |> Enum.reduce(%{}, fn batch, acc ->
+      batch_result = fetch_video_durations_batch(batch, api_key, http_client)
+      Map.merge(acc, batch_result)
+    end)
+  end
+
+  defp fetch_video_durations_batch(video_ids, api_key, http_client) do
     url = "https://www.googleapis.com/youtube/v3/videos"
 
     params =
@@ -96,21 +106,32 @@ defmodule Ngobrolin.Youtube do
 
     full_url = "#{url}?#{params}"
 
-    with {:ok, %{status: 200, body: body}} <- http_client.(full_url, []),
-         %{"items" => items} <- Jason.decode!(body) do
-      Enum.reduce(items, %{}, fn item, acc ->
-        Map.put(acc, item["id"], parse_duration(item["contentDetails"]["duration"]))
-      end)
-    else
-      _ -> %{}
+    case http_client.(full_url, []) do
+      {:ok, %{status: 200, body: body}} ->
+        %{"items" => items} = Jason.decode!(body)
+
+        Enum.into(items, %{}, fn item ->
+          {item["id"], parse_duration(item["contentDetails"]["duration"])}
+        end)
+
+      {:ok, %{status: status, body: body}} ->
+        IO.puts("YouTube API error (status #{status}): #{body}")
+        %{}
+
+      _error ->
+        %{}
     end
+  end
+
+  defp chunk_video_ids(video_ids, chunk_size) do
+    video_ids
+    |> Enum.chunk_every(chunk_size)
   end
 
   defp parse_duration(nil), do: 0
   defp parse_duration(""), do: 0
 
   defp parse_duration(duration_string) do
-    # Converts e.g. "PT1H30M4S" to integer seconds
     regex = ~r/^PT((?<hours>\d+)H)?((?<minutes>\d+)M)?((?<seconds>\d+)S)?$/
 
     case Regex.named_captures(regex, duration_string) do

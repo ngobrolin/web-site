@@ -1,7 +1,9 @@
 defmodule NgobrolinWeb.HomeLive do
   use NgobrolinWeb, :live_view
   alias Ngobrolin.Content
-  import NgobrolinWeb.ViewHelpers, only: [truncate: 1, format_date_with_timezone: 1]
+
+  import NgobrolinWeb.ViewHelpers,
+    only: [truncate: 1, format_date_with_timezone: 1, format_duration: 1]
 
   def mount(_params, _session, socket) do
     {:ok,
@@ -58,11 +60,9 @@ defmodule NgobrolinWeb.HomeLive do
                   alt={episode.title}
                   class="object-cover w-full h-full"
                 />
-                <!--
                 <div class="absolute bottom-0 right-0 px-3 py-1 m-2 text-sm font-bold bg-white text-zinc-900">
                   {format_duration(episode.duration)}
                 </div>
-                -->
               </div>
               <div class="p-4">
                 <p class="mb-2 text-sm font-bold text-zinc-300">
