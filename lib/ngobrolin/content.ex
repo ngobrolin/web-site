@@ -33,7 +33,9 @@ defmodule Ngobrolin.Content do
 
   """
   def list_episodes do
-    Repo.all(Episode)
+    Episode
+    |> order_by([e], desc: e.published_at)
+    |> Repo.all()
   end
 
   @doc """
