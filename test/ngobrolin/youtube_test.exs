@@ -2,7 +2,8 @@ defmodule Ngobrolin.YouTubeTest do
   use Ngobrolin.DataCase
 
   alias Ngobrolin.Youtube
-  alias Ngobrolin.Content
+
+  import Ngobrolin.ContentFixtures
 
   describe "Fetcher" do
     test "parse_response/1" do
@@ -74,19 +75,7 @@ defmodule Ngobrolin.YouTubeTest do
     end
 
     test "youtube_urls/0" do
-      valid_attrs = %{
-        status: "some status",
-        description: "some description",
-        title: "some title",
-        thumbnail_url: "some thumbnail_url",
-        duration: 42,
-        published_at: ~N[2025-02-18 03:16:00],
-        youtube_id: "youtube_id",
-        view_count: 42
-      }
-
-      {:ok, _} = Content.create_episode(valid_attrs)
-
+      episode_fixture()
       youtube_urls = Youtube.youtube_urls()
 
       # Assert that the list is not empty
