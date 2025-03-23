@@ -24,6 +24,12 @@ defmodule Ngobrolin.ContentTest do
       assert Content.list_episodes() == [episode]
     end
 
+    test "list_episodes/1 returns all episodes with the given status" do
+      downloaded = episode_fixture(status: "downloaded")
+      episode = episode_fixture()
+      assert Content.list_episodes(%{where: [status: "downloaded"]}) == [downloaded]
+    end
+
     test "get_episode!/1 returns the episode with given id" do
       episode = episode_fixture()
       assert Content.get_episode!(episode.id) == episode

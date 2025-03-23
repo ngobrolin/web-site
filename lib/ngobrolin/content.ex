@@ -13,28 +13,36 @@ defmodule Ngobrolin.Content do
 
   ## Examples
 
-      iex> list_episodes(25)
+      iex> list_episodes()
       [%Episode{}, ...]
 
   """
   def list_episodes(opts \\ %{}) do
-    query =
-      Episode
-      |> order_by([e], desc: e.published_at)
+    Episode
+    |> apply_ordering()
+    |> apply_limit(opts)
+    |> apply_conditions(opts)
+    |> Repo.all()
+  end
 
-    query =
-      case opts do
-        %{limit: limit} -> query |> limit(^limit)
-        _ -> query
-      end
+  defp apply_ordering(query) do
+    query |> order_by([e], desc: e.published_at)
+  end
 
-    query =
-      case opts do
-        %{where: conditions} -> query |> where(^conditions)
-        _ -> query
-      end
+  defp apply_limit(query, %{limit: limit}) do
+    query |> limit(^limit)
+  end
 
-    Repo.all(query)
+  defp apply_limit(query, _opts) do
+    query
+  end
+
+  defp apply_conditions(query, %{where: conditions}) do
+    query |> where(^conditions)
+  end
+
+  defp apply_conditions(query, _opts) do
+    query
   end
 
   @doc """
