@@ -15,72 +15,86 @@ defmodule NgobrolinWeb.AboutLive do
 
         <section class="mb-16">
           <div class="bg-zinc-800 border-4 border-white shadow-lg rounded-none p-8 transform rotate-1">
-            <h2 class="text-3xl font-black text-white uppercase tracking-tighter mb-6">MISI KAMI</h2>
+            <h2 class="text-3xl font-black text-white uppercase tracking-tighter mb-6">
+              VISI & MISI
+            </h2>
             <p class="text-white leading-relaxed">
-              Ngobrolin adalah platform video podcast yang bertujuan untuk menyampaikan konten teknologi
-              yang menarik, mendidik, dan menghubungkan komunitas kami. Kami membahas topik kompleks
-              dengan cara yang mudah dipahami tanpa mengurangi kedalaman teknisnya.
+              Menjadi platform diskusi terdepan yang menghubungkan para pengembang web di Indonesia untuk tetap mengikuti perkembangan teknologi web yang pesat, dengan berbagi pengetahuan, pengalaman, dan wawasan dalam suasana yang santai namun informatif.
             </p>
             <p class="text-white leading-relaxed mt-4">
-              Tujuan kami adalah menciptakan ruang di mana penggemar teknologi, profesional, dan pelajar
-              dapat menemukan wawasan berharga dan tetap terupdate dengan tren dan praktik terbaik.
+              Tujuan Ngobrolin WEB
+              <ol class="list-decimal">
+                <li>
+                  Menyediakan ruang diskusi yang santai namun fokus tentang berbagai topik seputar teknologi web.
+                </li>
+                <li>
+                  Mengulas perkembangan terkini di dunia web tanpa terbatas pada framework atau browser tertentu.
+                </li>
+                <li>
+                  Berbagi insight dan pengalaman dari praktisi web berpengalaman termasuk Google Developer Expert dan profesional di bidang web.
+                </li>
+                <li>
+                  Menjembatani kesenjangan pengetahuan bagi mereka yang merasa tertinggal dengan teknologi web yang berkembang pesat.
+                </li>
+                <li>
+                  Melibatkan komunitas dengan mengundang masukan, berita, dan koreksi dari penonton melalui kolom komentar.
+                </li>
+                <li>
+                  Memperluas wawasan tentang teknologi web melalui diskusi teknis, komparasi, dan topik-topik terkait web lainnya.
+                </li>
+              </ol>
+            </p>
+            <p class="text-white leading-relaxed mt-4">
+              Ngobrolin WEB adalah inisiatif untuk menciptakan wadah diskusi santai namun bermanfaat bagi para pengembang dan penggemar teknologi web di Indonesia, dengan tujuan utama membantu semua pihak untuk tetap mengikuti perkembangan teknologi web yang dinamis.
             </p>
           </div>
         </section>
 
         <section class="mb-16">
           <h2 class="text-3xl font-black text-white uppercase tracking-tighter mb-8 text-center transform -rotate-1">
-            TIM KAMI
+            PANELIS TETAP
           </h2>
           <div class="grid md:grid-cols-3 gap-8">
-            <div class="bg-zinc-800 border-4 border-white shadow-lg rounded-none p-6 text-center transform -rotate-1 hover:bg-white hover:text-zinc-900 transition-all duration-300 hover:scale-105">
+            <div class="bg-zinc-800 border-4 border-white shadow-lg rounded-none p-6 text-center transform -rotate-1 hover:bg-zinc-600 hover:text-zinc-900 transition-all duration-300 hover:scale-105">
               <img
-                src="/images/host-photo-1.jpg"
-                alt="Jane Doe"
+                src="/images/eka.jpg"
+                alt="Eka"
                 class="w-32 h-32 rounded-none border-4 border-white mx-auto mb-4 object-cover"
               />
               <h3 class="text-2xl font-black text-white uppercase mb-2 group-hover:text-zinc-900">
-                JANE DOE
+                Eka
               </h3>
-              <p class="text-zinc-300 mb-4 uppercase font-bold">HOST & PEMIMPIN TEKNIS</p>
+
               <p class="text-white leading-relaxed">
-                Jane memiliki pengalaman lebih dari 10 tahun di pengembangan perangkat lunak. Dia
-                mengkhususkan diri dalam sistem terdistribusi dan telah bekerja di beberapa perusahaan
-                teknologi besar. Jane mendirikan Ngobrolin pada tahun 2021 untuk berbagi pengetahuan
-                dan wawasan praktis.
+                Eka adalah pengembang web yang beralih karir dari bidang bahasa dan administrasi dengan latar belakang Sastra. Dia tertarik pada web karena aksesibilitasnya yang tinggi dan ekosistemnya yang dinamis. Menulis dan berbicara di depan umum adalah caranya memperkuat pembelajaran dan terhubung dengan sesama pengembang. Di luar coding, Eka menyukai musik, sastra, dan seni, pernah aktif di skena musik lokal, dan terlibat dalam proyek seni media yang meraih penghargaan. Saat ini bekerja di NGO Atma Connect dan merupakan Google Developer Expert bidang teknologi web.
               </p>
             </div>
-            <div class="bg-zinc-800 border-4 border-white shadow-lg rounded-none p-6 text-center transform rotate-1 hover:bg-white hover:text-zinc-900 transition-all duration-300 hover:scale-105">
+            <div class="bg-zinc-800 border-4 border-white shadow-lg rounded-none p-6 text-center transform rotate-1 hover:bg-zinc-600 hover:text-zinc-900 transition-all duration-300 hover:scale-105">
               <img
-                src="/images/host-photo-2.jpg"
-                alt="John Smith"
+                src="/images/ivan.jpg"
+                alt="Ivan"
                 class="w-32 h-32 rounded-none border-4 border-white mx-auto mb-4 object-cover"
               />
               <h3 class="text-2xl font-black text-white uppercase mb-2 group-hover:text-zinc-900">
-                JOHN SMITH
+                Ivan
               </h3>
-              <p class="text-zinc-300 mb-4 uppercase font-bold">CO-HOST & PRODUSER KONTEN</p>
+
               <p class="text-white leading-relaxed">
-                John membawa perspektif unik dari latar belakangnya di desain UX dan manajemen produk.
-                Dengan pengalaman di startup dan perusahaan besar, ia fokus pada aspek manusia dari
-                teknologi dan membuat topik kompleks lebih mudah diakses.
+                Ivan adalah Senior Web Engineer di Human Made, agensi teknologi global yang melayani klien enterprise dari berbagai industri. Fokus utamanya adalah platform penerbitan konten. Aktif di komunitas Web dan Teknologi Indonesia baik sebagai pembicara maupun penyelenggara acara. Sebagian besar karirnya dihabiskan bekerja di agensi digital. Ivan gemar mengeksplorasi teknologi web baru dan fokus pada peningkatan performa situs. Dia telah menjadi kontributor utama untuk beberapa plugin WordPress. Dengan pengalamannya dari industri dan akademis, Ivan memiliki minat yang kuat dalam membantu klien bisnis internasional, terutama di industri platform penerbitan konten.
               </p>
             </div>
-            <div class="bg-zinc-800 border-4 border-white shadow-lg rounded-none p-6 text-center transform -rotate-2 hover:bg-white hover:text-zinc-900 transition-all duration-300 hover:scale-105">
+            <div class="bg-zinc-800 border-4 border-white shadow-lg rounded-none p-6 text-center transform -rotate-2 hover:bg-zinc-600 hover:text-zinc-900 transition-all duration-300 hover:scale-105">
               <img
-                src="/images/host-photo-3.jpg"
+                src="/images/riza.jpg"
                 alt="Maya Putri"
                 class="w-32 h-32 rounded-none border-4 border-white mx-auto mb-4 object-cover"
               />
               <h3 class="text-2xl font-black text-white uppercase mb-2 group-hover:text-zinc-900">
-                MAYA PUTRI
+                RIZA
               </h3>
-              <p class="text-zinc-300 mb-4 uppercase font-bold">EDITOR & SOCIAL MEDIA</p>
               <p class="text-white leading-relaxed">
-                Maya adalah ahli media sosial dan editor video dengan bakat khusus dalam storytelling visual.
-                Dengan pengalaman di bidang jurnalisme digital, Maya memastikan setiap episode Ngobrolin
-                tampil dengan kualitas terbaik dan menjangkau audiens yang tepat melalui strategi
-                media sosial yang efektif.
+                Riza senang mempelajari teknologi terbaru dan berbagi dengan sesama developer yang membutuhkan bimbingan untuk meningkatkan keterampilan mereka. Merintis Hacktiv8 untuk mengatasi kelangkaan developer berkualitas yang menghambat pertumbuhan startup teknologi di Indonesia.
+                Senang berbagi pengetahuan dan tergabung dalam berbagai komunitas dan juga menjadi pembicara di berbagai acara komunitas.
               </p>
             </div>
           </div>
@@ -92,7 +106,7 @@ defmodule NgobrolinWeb.AboutLive do
           </h2>
           <div class="flex flex-wrap justify-center gap-6">
             <a
-              href="https://twitter.com/ngobrolin"
+              href="https://x.com/search?q=%23ngobrolinweb"
               class="flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white font-bold uppercase border-4 border-white rounded-none hover:bg-white hover:text-zinc-900 transform transition-transform hover:scale-105"
             >
               <svg
@@ -107,7 +121,7 @@ defmodule NgobrolinWeb.AboutLive do
               Twitter
             </a>
             <a
-              href="https://youtube.com/ngobrolin"
+              href="https://www.youtube.com/playlist?list=PLTY2nW4jwtG8Sx2Bw6QShC271PzX31CtT"
               class="flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white font-bold uppercase border-4 border-white rounded-none hover:bg-white hover:text-zinc-900 transform transition-transform hover:scale-105"
             >
               <svg
@@ -139,7 +153,7 @@ defmodule NgobrolinWeb.AboutLive do
               Email
             </a>
             <a
-              href="https://github.com/ngobrolin"
+              href="https://github.com/orgs/ngobrolin/discussions"
               class="flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white font-bold uppercase border-4 border-white rounded-none hover:bg-white hover:text-zinc-900 transform transition-transform hover:scale-105"
             >
               <svg

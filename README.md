@@ -31,6 +31,11 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 - [x] Phoenix main page layout
 - [x] Search functionality
 - [x] Navigation and routing
+- [x] About page
+- [ ] Sponsor page
+- [ ] Feed xml
+   - [ ] Download all audio to s3
+   - [ ] Name audio file with video id
 
 ## Latest Changes
 
