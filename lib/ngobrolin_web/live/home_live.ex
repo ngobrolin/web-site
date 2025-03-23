@@ -1,13 +1,13 @@
 defmodule NgobrolinWeb.HomeLive do
   use NgobrolinWeb, :live_view
   alias Ngobrolin.Content
-  import NgobrolinWeb.ViewHelpers, only: [format_duration: 1, format_date: 1]
+  import NgobrolinWeb.ViewHelpers, only: [truncate: 1]
 
   def mount(_params, _session, socket) do
     {:ok,
      assign(socket,
        page_title: "Indeks",
-       episodes: Content.list_episodes() |> Enum.sort_by(& &1.episode_number, :desc)
+       episodes: Content.list_episodes(30) |> Enum.sort_by(& &1.episode_number, :desc)
      )}
   end
 
@@ -71,7 +71,7 @@ defmodule NgobrolinWeb.HomeLive do
                 </p>
                 -->
                 <h2 class="mb-2 text-xl font-bold">{episode.title}</h2>
-                <p class="text-sm text-zinc-300">{episode.description}</p>
+                <p class="text-sm text-zinc-300">{truncate(episode.description)}</p>
               </div>
             </article>
           </.link>

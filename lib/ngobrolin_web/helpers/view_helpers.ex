@@ -19,4 +19,12 @@ defmodule NgobrolinWeb.ViewHelpers do
         Calendar.strftime(naive_datetime, "%d %b %Y")
     end
   end
+
+  def truncate(string, max_length \\ 300) do
+    if String.length(string) > max_length do
+      String.slice(string, 0, max_length) <> "..."
+    else
+      string
+    end
+  end
 end

@@ -13,6 +13,21 @@ defmodule Ngobrolin.Content do
 
   ## Examples
 
+      iex> list_episodes(25)
+      [%Episode{}, ...]
+
+  """
+  def list_episodes(limit) do
+    Episode
+    |> limit(^limit)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the list of episodes.
+
+  ## Examples
+
       iex> list_episodes()
       [%Episode{}, ...]
 
