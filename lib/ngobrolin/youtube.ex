@@ -5,6 +5,7 @@ defmodule Ngobrolin.Youtube do
 
   import Ecto.Query
   alias Ngobrolin.Content.Episode
+  alias Ngobrolin.Content
 
   def fetch_videos(playlist_id, opts \\ []) do
     api_key = Keyword.get(opts, :api_key, Application.get_env(:ngobrolin, :youtube_api_key))
@@ -95,6 +96,14 @@ defmodule Ngobrolin.Youtube do
     |> Enum.reduce(%{}, fn batch, acc ->
       batch_result = fetch_video_durations_batch(batch, api_key, http_client)
       Map.merge(acc, batch_result)
+    end)
+  end
+
+  def youtube_urls() do
+    episodes = Content.list_episodes()
+
+    Enum.map(episodes, fn episode ->
+      "https://www.youtube.com/watch?v=#{episode.youtube_id}"
     end)
   end
 
