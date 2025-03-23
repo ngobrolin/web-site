@@ -19,6 +19,7 @@ defmodule Ngobrolin.Content do
   """
   def list_episodes(limit) do
     Episode
+    |> order_by([e], desc: e.published_at)
     |> limit(^limit)
     |> Repo.all()
   end
