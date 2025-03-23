@@ -3,6 +3,9 @@ defmodule Ngobrolin.Youtube do
     Fetches YouTube video data from playlist id with YouTube API v3.
   """
 
+  import Ecto.Query
+  alias Ngobrolin.Content.Episode
+
   def fetch_videos(playlist_id, opts \\ []) do
     api_key = Keyword.get(opts, :api_key, Application.get_env(:ngobrolin, :youtube_api_key))
     http_client = Keyword.get(opts, :http_client, &default_http_client/2)
@@ -32,10 +35,34 @@ defmodule Ngobrolin.Youtube do
       %{
         title: item["snippet"]["title"],
         description: item["snippet"]["description"],
-        thumbnail: item["snippet"]["thumbnails"]["default"]["url"],
+        thumbnail: item["snippet"]["thumbnails"]["standard"]["url"],
         video_id: item["snippet"]["resourceId"]["videoId"]
       }
     end)
+  end
+
+  def sync(playlist_id) do
+    # Collect all video_ids from the playlist
+    videos = fetch_videos(playlist_id)
+    video_ids = Enum.map(videos, & &1.video_id)
+    # Check if the video_ids are already in the database
+    existing_video_ids = Ngobrolin.Repo.all(from e in Episode, select: e.youtube_id)
+    # Filter out the video_ids that are already in the database
+    new_video_ids = video_ids -- existing_video_ids
+    # Insert new videos into the database
+    Enum.each(new_video_ids, fn video_id ->
+      video = Enum.find(videos, fn v -> v.video_id == video_id end)
+
+      Ngobrolin.Repo.insert!(%Episode{
+        youtube_id: video.video_id,
+        title: video.title,
+        description: video.description,
+        thumbnail_url: video.thumbnail
+      })
+    end)
+
+    # Return the list of new video_ids
+    new_video_ids
   end
 
   defp default_http_client(url, headers) do
