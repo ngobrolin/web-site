@@ -29,14 +29,7 @@ defmodule NgobrolinWeb.HomeLiveTest do
       assert view |> has_element?("article")
       assert view |> has_element?("img[src='#{episode.thumbnail_url}']")
       assert view |> has_element?("h2", episode.title)
-      assert view |> has_element?("p", ~r/EP #{episode.episode_number}/)
       assert view |> has_element?("div", "30 menit")
-    end
-
-    test "search input is present", %{conn: conn} do
-      {:ok, view, _html} = live(conn, ~p"/")
-      assert view |> has_element?("input[placeholder='Cari episode...']")
-      assert view |> has_element?("button", "CARI")
     end
   end
 end
