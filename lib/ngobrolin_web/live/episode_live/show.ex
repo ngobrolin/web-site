@@ -3,6 +3,9 @@ defmodule NgobrolinWeb.EpisodeLive.Show do
 
   alias Ngobrolin.Content
 
+  import NgobrolinWeb.ViewHelpers,
+    only: [format_duration: 1, format_date_with_timezone: 1]
+
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket) do

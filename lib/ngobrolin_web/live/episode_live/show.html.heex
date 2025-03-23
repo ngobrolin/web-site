@@ -3,17 +3,20 @@
     <div class="mb-10">
       <div class="flex flex-col gap-2">
         <p class="text-sm font-bold text-zinc-300">
-          EP {@episode.episode_number} • {@episode.published_at}
+          <!-- EP {@episode.episode_number} • -->
+          {format_date_with_timezone(@episode.published_at)}
         </p>
         <h1 class="text-4xl font-black tracking-tighter transform -rotate-1 shadow-[4px_4px_0px_0px_#ffffff] inline-block">
           {@episode.title}
         </h1>
         <div class="flex items-center gap-4 text-sm text-zinc-300">
+        <!--
           <span>
             <.icon name="hero-eye" class="w-4 h-4 inline mr-1" /> {@episode.view_count} views
           </span>
+          -->
           <span>
-            <.icon name="hero-clock" class="w-4 h-4 inline mr-1" /> {@episode.duration}
+            <.icon name="hero-clock" class="w-4 h-4 inline mr-1" /> {format_duration(@episode.duration)}
           </span>
         </div>
       </div>
