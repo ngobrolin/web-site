@@ -81,6 +81,7 @@ defmodule Ngobrolin.Youtube do
         description: video.description,
         thumbnail_url: video.thumbnail,
         published_at: video.published_at,
+        status: "",
         duration: Map.get(durations_map, video.video_id)
       })
     end)

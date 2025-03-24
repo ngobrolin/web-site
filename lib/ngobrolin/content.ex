@@ -47,7 +47,7 @@ defmodule Ngobrolin.Content do
 
   def list_new_episodes() do
     Episode
-    |> where([e], is_nil(e.status))
+    |> where([e], e.status != "downloaded")
     |> Repo.all()
   end
 
