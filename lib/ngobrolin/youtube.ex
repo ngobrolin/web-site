@@ -118,7 +118,7 @@ defmodule Ngobrolin.Youtube do
 
       IO.puts("Uploading #{episode.youtube_id}...")
 
-      ExAws.S3.put_object("ngweb-assets", "#{episode.youtube_id}.mp3", body)
+      ExAws.S3.put_object("ngweb-assets", "#{episode.youtube_id}.mp3", body, acl: :public_read)
       |> ExAws.request!()
 
       # Update the episode status to "uploaded"
