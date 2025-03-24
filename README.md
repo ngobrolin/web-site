@@ -34,10 +34,11 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 - [x] About page
 - [x] Sponsor page
 - [ ] Feed xml
-   - [x] Download all audio to s3
    - [x] Name audio file with video id
    - [x] Using yt-dlp
    - [x] Flag episode as downloaded
+   - [x] Upload all audio to s3
+   - [ ] S3 public read
 - [ ] Description from markdown file
 
 ## Latest Changes

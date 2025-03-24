@@ -1,7 +1,6 @@
 defmodule Ngobrolin.Content.Episode do
   use Ecto.Schema
   import Ecto.Changeset
-  import Ecto.Query
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -42,21 +41,5 @@ defmodule Ngobrolin.Content.Episode do
       :youtube_id,
       :status
     ])
-    |> maybe_set_episode_number()
-  end
-
-  defp maybe_set_episode_number(changeset) do
-    if get_change(changeset, :episode_number) do
-      changeset
-    else
-      put_change(changeset, :episode_number, get_next_episode_number())
-    end
-  end
-
-  defp get_next_episode_number do
-    case Ngobrolin.Repo.one(from e in __MODULE__, select: max(e.episode_number)) do
-      nil -> 1
-      max_number -> max_number + 1
-    end
   end
 end

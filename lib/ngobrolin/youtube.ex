@@ -54,7 +54,8 @@ defmodule Ngobrolin.Youtube do
         description: item["snippet"]["description"],
         thumbnail: item["snippet"]["thumbnails"]["standard"]["url"],
         video_id: item["snippet"]["resourceId"]["videoId"],
-        published_at: published_at
+        published_at: published_at,
+        episode_number: item["snippet"]["position"] + 1
       }
     end)
   end
@@ -108,32 +109,19 @@ defmodule Ngobrolin.Youtube do
 
   # Upload audio to S3
   def upload_audio() do
-    {:ok, audio_files} =
-      File.ls("./priv/static/audio")
-      |> case do
-        {:ok, files} ->
-          {:ok, Enum.map(files, &Path.join("./priv/static/audio", &1))}
-
-        {:error, reason} ->
-          {:error, reason}
-      end
-
+    episodes = Content.list_new_audio()
     # Upload each audio file to S3
-    Enum.each(audio_files, fn file ->
+    Enum.each(episodes, fn episode ->
       # Upload to S3
 
-      body = File.read!(file)
-      filename = String.split(file, "audio/") |> List.last()
+      body = File.read!("./priv/static/audio/#{episode.youtube_id}.mp3")
 
-      IO.puts("Uploading #{filename}...")
+      IO.puts("Uploading #{episode.youtube_id}...")
 
-      youtube_id = String.replace(filename, ".mp3", "")
-
-      ExAws.S3.put_object("ngweb-assets", filename, body)
+      ExAws.S3.put_object("ngweb-assets", "#{episode.youtube_id}.mp3", body)
       |> ExAws.request!()
 
       # Update the episode status to "uploaded"
-      episode = Content.get_episode_by_youtube_id!(youtube_id)
       Content.update_episode(episode, %{status: "uploaded"})
     end)
   end

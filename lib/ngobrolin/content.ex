@@ -51,6 +51,12 @@ defmodule Ngobrolin.Content do
     |> Repo.all()
   end
 
+  def list_new_audio() do
+    Episode
+    |> where([e], e.status != "uploaded")
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single episode.
 
