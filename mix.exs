@@ -59,7 +59,11 @@ defmodule Ngobrolin.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:tzdata, "~> 1.1"},
-      {:mix_test_interactive, "~> 4.3", only: :dev, runtime: false}
+      {:mix_test_interactive, "~> 4.3", only: :dev, runtime: false},
+      {:ex_aws, "~> 2.1"},
+      {:ex_aws_s3, "~> 2.0"},
+      {:hackney, "~> 1.9"},
+      {:sweet_xml, "~> 0.6"}
     ]
   end
 

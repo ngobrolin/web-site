@@ -82,7 +82,7 @@ defmodule Ngobrolin.YouTubeTest do
       assert length(youtube_urls) > 0
 
       # Assert that each URL is a valid YouTube URL
-      Enum.each(youtube_urls, fn url ->
+      Enum.each(youtube_urls, fn {_episode, url} ->
         assert String.starts_with?(url, "https://www.youtube.com/watch?v=")
       end)
     end

@@ -41,6 +41,15 @@ defmodule Ngobrolin.ContentTest do
       assert Content.get_episode!(episode.id) == episode
     end
 
+    test "get_episode_by_youtube_id!/1 returns the episode with given youtube_id" do
+      episode = episode_fixture(youtube_id: "some_youtube_id")
+      assert Content.get_episode_by_youtube_id!(episode.youtube_id) == episode
+    end
+
+    test "get_episode_by_youtube_id!/1 raises error if youtube_id not found" do
+      assert Content.get_episode_by_youtube_id!("non_existent_youtube_id") == nil
+    end
+
     test "create_episode/1 with valid data creates a episode" do
       valid_attrs = %{
         status: "some status",

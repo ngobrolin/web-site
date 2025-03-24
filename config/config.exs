@@ -65,6 +65,14 @@ config :phoenix, :json_library, Jason
 
 config :ngobrolin, :playlist_id, "PLTY2nW4jwtG8Sx2Bw6QShC271PzX31CtT"
 
+config :ngobrolin, :youtube_api_key, System.get_env("YOUTUBE_API_KEY")
+config :ngobrolin, :aws_access_key, System.get_env("AWS_ACCESS_KEY")
+
+config :ex_aws,
+  json_codec: Jason,
+  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

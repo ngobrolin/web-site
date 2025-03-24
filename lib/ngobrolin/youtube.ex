@@ -90,6 +90,71 @@ defmodule Ngobrolin.Youtube do
     new_video_ids
   end
 
+  def youtube_urls() do
+    episodes = Content.list_new_episodes()
+
+    Enum.map(episodes, fn episode ->
+      {episode, "https://www.youtube.com/watch?v=#{episode.youtube_id}"}
+    end)
+  end
+
+  def download_new_episodes() do
+    episodes = youtube_urls()
+
+    Enum.each(episodes, fn {episode, url} ->
+      download_episode({episode, url})
+    end)
+  end
+
+  # Upload audio to S3
+  def upload_audio() do
+    {:ok, audio_files} =
+      File.ls("./priv/static/audio")
+      |> case do
+        {:ok, files} ->
+          {:ok, Enum.map(files, &Path.join("./priv/static/audio", &1))}
+
+        {:error, reason} ->
+          {:error, reason}
+      end
+
+    # Upload each audio file to S3
+    Enum.each(audio_files, fn file ->
+      # Upload to S3
+
+      body = File.read!(file)
+      filename = String.split(file, "audio/") |> List.last()
+
+      IO.puts("Uploading #{filename}...")
+
+      youtube_id = String.replace(filename, ".mp3", "")
+
+      ExAws.S3.put_object("ngweb-assets", filename, body)
+      |> ExAws.request!()
+
+      # Update the episode status to "uploaded"
+      episode = Content.get_episode_by_youtube_id!(youtube_id)
+      Content.update_episode(episode, %{status: "uploaded"})
+    end)
+  end
+
+  defp download_episode({episode, url}) do
+    Task.async(fn ->
+      IO.puts("Downloading #{episode.youtube_id}: #{url}")
+      # Download audio version using yt-dlp cli
+      System.cmd("yt-dlp", [
+        "-x",
+        "--audio-format",
+        "mp3",
+        "-o",
+        "./priv/static/audio/#{episode.youtube_id}.mp3",
+        url
+      ])
+
+      Content.update_episode(episode, %{status: "downloaded"})
+    end)
+  end
+
   defp fetch_video_durations(video_ids, api_key, http_client) do
     # Batch video IDs in chunks of 50 (YouTube API limit)
     video_ids
@@ -97,14 +162,6 @@ defmodule Ngobrolin.Youtube do
     |> Enum.reduce(%{}, fn batch, acc ->
       batch_result = fetch_video_durations_batch(batch, api_key, http_client)
       Map.merge(acc, batch_result)
-    end)
-  end
-
-  def youtube_urls() do
-    episodes = Content.list_episodes()
-
-    Enum.map(episodes, fn episode ->
-      "https://www.youtube.com/watch?v=#{episode.youtube_id}"
     end)
   end
 

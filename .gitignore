@@ -43,3 +43,7 @@ npm-debug.log
 docs/v0-ngobrolin-web
 docs/bolt-ngobrolin-web*
 docs/bolt-brutalist-restaurant
+
+*.mp3
+*.mp4
+*.m4a

@@ -13,6 +13,7 @@ let
 	    glibcLocales
 	    nodejs_22
 	    postgresql
+			yt-dlp
 	  ];
 
 	inputs = basePackages

@@ -67,6 +67,12 @@ defmodule Ngobrolin.Content do
   """
   def get_episode!(id), do: Repo.get!(Episode, id)
 
+  def get_episode_by_youtube_id!(youtube_id) do
+    Episode
+    |> where([e], e.youtube_id == ^youtube_id)
+    |> Repo.one()
+  end
+
   if Mix.env() == :test do
     @doc """
     Creates a episode. Only available in test environment.
