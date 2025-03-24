@@ -45,6 +45,12 @@ defmodule Ngobrolin.Content do
     query
   end
 
+  def list_new_episodes() do
+    Episode
+    |> where([e], is_nil(e.status))
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single episode.
 
