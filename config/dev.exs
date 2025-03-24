@@ -3,7 +3,7 @@ import Config
 # Configure your database
 config :ngobrolin, Ngobrolin.Repo,
   username: "riza",
-  password: "",
+  password: "empty",
   hostname: "localhost",
   database: "ngobrolin_dev",
   stacktrace: true,

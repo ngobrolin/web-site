@@ -7,7 +7,7 @@ import Config
 # Run `mix help test` for more information.
 config :ngobrolin, Ngobrolin.Repo,
   username: "riza",
-  password: "",
+  password: "empty",
   hostname: "localhost",
   database: "ngobrolin_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
