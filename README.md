@@ -2,22 +2,12 @@
 
 Ngobrolin is a video podcast platform focused on delivering engaging tech content. This repository contains both the main Phoenix application and a Next.js reference implementation.
 
-## Project Structure
-
-- `/` - Main Phoenix/LiveView application
-- `/docs/v0-ngobrolin-web/` - Next.js reference implementation
-
 ## Current Goals
 
 1. Implement main page layout in Phoenix/LiveView matching the design of the Next.js implementation:
    - Navigation bar with logo, menu items, and search
    - Episode directory with grid layout
    - Footer with copyright and social links
-
-2. Maintain consistent styling between Phoenix and Next.js implementations:
-   - Color scheme: #1a203b (background), #6587ff (primary blue), #a76ab7 (accent purple)
-   - Typography: Inter font, bold headings
-   - Modern, clean layout with consistent spacing
 
 ## Progress
 
@@ -33,13 +23,14 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 - [x] Navigation and routing
 - [x] About page
 - [x] Sponsor page
-- [ ] Feed xml
-   - [x] Name audio file with video id
-   - [x] Using yt-dlp
-   - [x] Flag episode as downloaded
-   - [x] Upload all audio to s3
-   - [ ] S3 public read
-- [ ] Description from markdown file
+- [x] Podcast feed XML
+   - [x] Audio file naming convention with video ID
+   - [x] YouTube audio extraction using yt-dlp
+   - [x] Episode download status tracking
+   - [x] S3 storage integration for audio files
+   - [x] Configure S3 public read access
+- [ ] Episode descriptions using markdown files
+- [ ] Add comment functionality
 
 ## Latest Changes
 
@@ -58,16 +49,36 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 - Reorganized episode detail layout for better visual hierarchy
 - Updated action buttons to match global design pattern
 - Localized UI text to Bahasa Indonesia for better user experience
+- Implemented podcast feed infrastructure with audio extraction capabilities
+- Added S3 storage integration for hosting podcast audio files
 
-## TODO
 
-1. Add persistent mini-player while scrolling
-2. Implement search and filtering functionality
-3. Implement pagination for episode listing
-4. Create navigation bar with search
-5. Add footer with social links
-6. Implement related episodes recommendations
-7. Add comment section functionality
+## Contributing
+
+We welcome contributions to the Ngobrolin project! Here's how you can help:
+
+### Reporting Issues
+
+- Use the GitHub issue tracker to report bugs or suggest features
+- Before creating an issue, please check if a similar one already exists
+- Provide as much context as possible: screenshots, error messages, and steps to reproduce
+
+### Pull Requests
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow the existing code style and conventions
+- Add tests for new features when applicable
+- Update documentation as needed
+- Be respectful and constructive in discussions
+
+Even if you're not ready to contribute code, we value your feedback and ideas! Feel free to open discussions or suggest improvements through issues.
 
 ## Development
 
