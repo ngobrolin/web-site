@@ -29,7 +29,8 @@ defmodule Ngobrolin.YouTubeTest do
           description: "Video Description",
           thumbnail: "http://example.com/thumbnail.jpg",
           video_id: "12345",
-          published_at: ~N[2021-01-01 00:00:00]
+          published_at: ~N[2021-01-01 00:00:00],
+          episode_number: 1
         }
       ]
 
@@ -69,7 +70,8 @@ defmodule Ngobrolin.YouTubeTest do
                  description: "Test Description",
                  thumbnail: "http://example.com/thumbnail.jpg",
                  video_id: "test123",
-                 published_at: ~N[2021-01-01 00:00:00]
+                 published_at: ~N[2021-01-01 00:00:00],
+                 episode_number: 1
                }
              ]
     end

@@ -55,7 +55,7 @@ defmodule Ngobrolin.Youtube do
         thumbnail: item["snippet"]["thumbnails"]["standard"]["url"],
         video_id: item["snippet"]["resourceId"]["videoId"],
         published_at: published_at,
-        episode_number: item["snippet"]["position"] + 1
+        episode_number: (item["snippet"]["position"] || 0) + 1
       }
     end)
   end
