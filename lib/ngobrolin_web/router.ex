@@ -14,6 +14,15 @@ defmodule NgobrolinWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :xml do
+    plug :accepts, ["xml"]
+  end
+
+  scope "/", NgobrolinWeb do
+    pipe_through :xml
+    get "/feed", HomeController, :feed
+  end
+
   scope "/", NgobrolinWeb do
     pipe_through :browser
 
