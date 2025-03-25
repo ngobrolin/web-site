@@ -32,6 +32,8 @@ defmodule NgobrolinWeb.Router do
     live "/about", AboutLive
     live "/sponsor", SponsorshipLive
     live "/request", TopicRequestLive
+
+    get "/sync", HomeController, :sync
   end
 
   # Other scopes may use custom stacks.

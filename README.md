@@ -29,9 +29,9 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
    - [x] Episode download status tracking
    - [x] S3 storage integration for audio files
    - [x] Configure S3 public read access
-- [ ] Setup CI
-- [ ] Deploy
-- [ ] Add sync episodes routes with hardcoded password over GET request
+- [x] Setup CI
+- [x] Deploy
+- [x] Add sync episodes routes 
 - [ ] Episode descriptions using markdown files
 - [ ] Add comment functionality
 

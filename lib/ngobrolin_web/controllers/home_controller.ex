@@ -1,9 +1,15 @@
 defmodule NgobrolinWeb.HomeController do
   use NgobrolinWeb, :controller
 
-  alias Ngobrolin.Content
+  alias Ngobrolin.{Content, Youtube}
 
-  # def init(opts), do: opts
+  def sync(conn, _params) do
+    Youtube.sync(Application.get_env(:ngobrolin, :playlist_id))
+
+    conn
+    |> put_flash(:info, "Synced successfully")
+    |> redirect(to: ~p"/")
+  end
 
   def feed(conn, _params) do
     episodes = Content.list_episodes()
