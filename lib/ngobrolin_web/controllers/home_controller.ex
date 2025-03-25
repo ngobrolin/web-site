@@ -4,7 +4,7 @@ defmodule NgobrolinWeb.HomeController do
   alias Ngobrolin.{Content, Youtube}
 
   def sync(conn, _params) do
-    dbg(Application.get_env(:ngobrolin, :youtube_api_key))
+    dbg(System.get_env("YOUTUBE_API_KEY"))
     Youtube.sync(Application.get_env(:ngobrolin, :playlist_id))
 
     conn
