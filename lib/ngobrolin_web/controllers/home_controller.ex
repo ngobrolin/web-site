@@ -5,6 +5,7 @@ defmodule NgobrolinWeb.HomeController do
 
   def sync(conn, _params) do
     Youtube.sync(Application.get_env(:ngobrolin, :playlist_id))
+    dbg(Application.get_env(:ngobrolin, :youtube_api_key))
 
     conn
     |> put_flash(:info, "Synced successfully")
