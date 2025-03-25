@@ -8,7 +8,7 @@ defmodule Ngobrolin.Youtube do
   alias Ngobrolin.Content
 
   def fetch_videos(playlist_id, opts \\ []) do
-    api_key = Keyword.get(opts, :api_key, Application.get_env(:ngobrolin, :youtube_api_key))
+    api_key = System.get_env("YOUTUBE_API_KEY")
     http_client = Keyword.get(opts, :http_client, &default_http_client/2)
     do_fetch_videos(playlist_id, api_key, http_client)
   end
