@@ -67,7 +67,7 @@ defmodule Ngobrolin.Youtube do
     # Check if the video_ids are already in the database
     existing_video_ids = Ngobrolin.Repo.all(from e in Episode, select: e.youtube_id)
     # Fetch durations for the videos
-    api_key = Application.get_env(:ngobrolin, :youtube_api_key)
+    api_key = System.get_env("YOUTUBE_API_KEY")
     http_client = &default_http_client/2
     durations_map = fetch_video_durations(video_ids, api_key, http_client)
     # Filter out the video_ids that are already in the database
