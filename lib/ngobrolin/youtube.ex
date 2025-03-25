@@ -26,7 +26,6 @@ defmodule Ngobrolin.Youtube do
       })
 
     full_url = "#{url}?#{params}"
-    dbg(full_url)
 
     case http_client.(full_url, []) do
       {:ok, %{status: 200, body: body}} ->
