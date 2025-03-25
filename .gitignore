@@ -47,3 +47,11 @@ docs/bolt-brutalist-restaurant
 *.mp3
 *.mp4
 *.m4a
+
+rel/
+*.gz
+favicon*
+robots*
+
+*-*.jpg
+*-*.svg
