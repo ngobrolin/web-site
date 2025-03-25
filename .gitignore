@@ -48,7 +48,6 @@ docs/bolt-brutalist-restaurant
 *.mp4
 *.m4a
 
-rel/
 *.gz
 favicon*
 robots*
