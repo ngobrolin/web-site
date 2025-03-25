@@ -160,6 +160,7 @@ defmodule Ngobrolin.Youtube do
       URI.encode_query(%{part: "contentDetails", id: Enum.join(video_ids, ","), key: api_key})
 
     full_url = "#{url}?#{params}"
+    dbg(full_url)
 
     case http_client.(full_url, []) do
       {:ok, %{status: 200, body: body}} ->
