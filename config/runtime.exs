@@ -63,6 +63,7 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
+    check_origin: ["127.0.0.1", "https://o4kgcocooww8c0wk0cgss8gc.riza.world"],
     secret_key_base: secret_key_base
 
   # ## SSL Support
