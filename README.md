@@ -2,13 +2,6 @@
 
 Ngobrolin is a video podcast platform focused on delivering engaging tech content. This repository contains both the main Phoenix application and a Next.js reference implementation.
 
-## Current Goals
-
-1. Implement main page layout in Phoenix/LiveView matching the design of the Next.js implementation:
-   - Navigation bar with logo, menu items, and search
-   - Episode directory with grid layout
-   - Footer with copyright and social links
-
 ## Progress
 
 - [x] Initial Phoenix application setup
@@ -32,29 +25,9 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 - [x] Setup CI
 - [x] Deploy
 - [x] Add sync episodes routes 
+- [ ] Meta tags, card and SEO stuff
 - [ ] Episode descriptions using markdown files
 - [ ] Add comment functionality
-
-## Latest Changes
-
-- Added Episode schema with fields: title, description, thumbnail_url, duration, published_at, youtube_id, view_count, status, and episode_number
-- Implemented auto-incrementing episode numbers for new episodes
-- Generated LiveView components for Episode listing and management
-- Set up database migrations for episodes table
-- Configured Episode routes in the router
-- Enhanced episode detail page with video player, show notes, and social sharing
-- Added view count tracking for episodes
-- Improved episode detail page layout and responsiveness
-- Integrated lite-youtube-embed for better video performance
-- Updated episode detail page styling to match home page design system
-- Implemented consistent border styles and color scheme across pages
-- Enhanced typography with brand colors and font weights
-- Reorganized episode detail layout for better visual hierarchy
-- Updated action buttons to match global design pattern
-- Localized UI text to Bahasa Indonesia for better user experience
-- Implemented podcast feed infrastructure with audio extraction capabilities
-- Added S3 storage integration for hosting podcast audio files
-
 
 ## Contributing
 
@@ -84,6 +57,19 @@ We welcome contributions to the Ngobrolin project! Here's how you can help:
 Even if you're not ready to contribute code, we value your feedback and ideas! Feel free to open discussions or suggest improvements through issues.
 
 ## Development
+
+### Prerequisites
+
+Before running the application, ensure you have the following installed:
+
+* **Elixir** - The project requires Elixir 1.14 or later
+  * See the [official Elixir installation guide](https://elixir-lang.org/install.html) for your operating system
+  * You can also use version managers like [asdf](https://github.com/asdf-vm/asdf) to manage Elixir versions
+* **PostgreSQL** - Required for the application database
+  * PostgreSQL 13 or later is recommended
+  * Make sure the PostgreSQL service is running before starting the application
+
+### Starting the Server
 
 To start your Phoenix server:
 
