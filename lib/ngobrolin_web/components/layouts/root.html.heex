@@ -4,6 +4,34 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
+    <!-- Primary Meta Tags -->
+    <meta name="description" content={assigns[:meta_description] || "Ngobrolin WEB - Podcast tentang pengembangan web dan teknologi terkini. Mengudara setiap Selasa malam mulai pukul 20:00 WIB."} />
+    <meta name="keywords" content="podcast web, pengembangan web, teknologi, web development, programming" />
+    <meta name="author" content="Ngobrolin WEB" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={assigns[:canonical_url] || "https://ngobrolin-web.riza.world#{Phoenix.Controller.current_path(@conn)}"} />
+    <meta property="og:title" content={assigns[:page_title] || "Ngobrolin WEB"} />
+    <meta property="og:description" content={assigns[:meta_description] || "Ngobrolin WEB - Podcast tentang pengembangan web dan teknologi terkini."} />
+    <meta property="og:image" content={assigns[:og_image] || "https://ngobrolin-web.riza.world/images/og-image.png"} />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={assigns[:canonical_url] || "https://ngobrolin-web.riza.world#{Phoenix.Controller.current_path(@conn)}"} />
+    <meta name="twitter:title" content={assigns[:page_title] || "Ngobrolin WEB"} />
+    <meta name="twitter:description" content={assigns[:meta_description] || "Ngobrolin WEB - Podcast tentang pengembangan web dan teknologi terkini."} />
+    <meta name="twitter:image" content={assigns[:og_image] || "/images/og-image.png"} />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={assigns[:canonical_url] || "https://ngobrolin-web.riza.world#{Phoenix.Controller.current_path(@conn)}"} />
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
     <.live_title suffix=" · Ngobrolin WEB">
       {assigns[:page_title] || "Ngobrolin WEB"}
     </.live_title>
@@ -15,6 +43,26 @@
     />
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
+    </script>
+    
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "PodcastSeries",
+        "name": "Ngobrolin WEB",
+        "description": "Podcast tentang pengembangan web dan teknologi terkini.",
+        "url": "https://ngobrolin-web.riza.world",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Ngobrolin WEB",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ngobrolin-web.riza.world/images/logo.png"
+          }
+        },
+        "inLanguage": "id-ID"
+      }
     </script>
   </head>
   <body class="bg-zinc-900 text-white antialiased">
