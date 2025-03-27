@@ -21,15 +21,13 @@
     <meta name="twitter:url" content={assigns[:canonical_url] || "https://ngobrolin-web.riza.world#{Phoenix.Controller.current_path(@conn)}"} />
     <meta name="twitter:title" content={assigns[:page_title] || "Ngobrolin WEB"} />
     <meta name="twitter:description" content={assigns[:meta_description] || "Ngobrolin WEB - Podcast tentang pengembangan web dan teknologi terkini."} />
-    <meta name="twitter:image" content={assigns[:og_image] || "/images/og-image.png"} />
+    <meta name="twitter:image" content={assigns[:og_image] || "https://ngobrolin-web.riza.world/images/og-image.png"} />
     
     <!-- Canonical URL -->
     <link rel="canonical" href={assigns[:canonical_url] || "https://ngobrolin-web.riza.world#{Phoenix.Controller.current_path(@conn)}"} />
     
     <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎙️</text></svg>" />
     <link rel="manifest" href="/site.webmanifest" />
     
     <.live_title suffix=" · Ngobrolin WEB">
@@ -58,7 +56,7 @@
           "name": "Ngobrolin WEB",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://ngobrolin-web.riza.world/images/logo.png"
+            "url": "https://ngobrolin-web.riza.world/images/logo.jpeg"
           }
         },
         "inLanguage": "id-ID"

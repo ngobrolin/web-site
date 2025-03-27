@@ -8,7 +8,7 @@ defmodule NgobrolinWeb.HomeLive do
   def mount(_params, _session, socket) do
     {:ok,
      assign(socket,
-       page_title: "Indeks",
+       page_title: "Halaman Utama",
        episodes: Content.list_episodes(%{limit: 30})
      )}
   end
