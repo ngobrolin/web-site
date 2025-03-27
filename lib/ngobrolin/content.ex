@@ -73,30 +73,40 @@ defmodule Ngobrolin.Content do
   """
   def get_episode!(id), do: Repo.get!(Episode, id)
 
+  @doc """
+  Gets a single episode by youtube_id.
+  Raises `Ecto.NoResultsError` if the Episode does not exist.
+  ## Examples
+
+      iex> get_episode_by_youtube_id!("1234567890")
+      %Episode{}
+
+      iex> get_episode_by_youtube_id!("0987654321")
+      ** (Ecto.NoResultsError)
+
+  """
   def get_episode_by_youtube_id!(youtube_id) do
     Episode
     |> where([e], e.youtube_id == ^youtube_id)
     |> Repo.one()
   end
 
-  if Mix.env() == :test do
-    @doc """
-    Creates a episode. Only available in test environment.
+  @doc """
+  Creates a episode. Only available in test environment.
 
-    ## Examples
+  ## Examples
 
-        iex> create_episode(%{field: value})
-        {:ok, %Episode{}}
+      iex> create_episode(%{field: value})
+      {:ok, %Episode{}}
 
-        iex> create_episode(%{field: bad_value})
-        {:error, %Ecto.Changeset{}}
+      iex> create_episode(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
 
-    """
-    def create_episode(attrs \\ %{}) do
-      %Episode{}
-      |> Episode.changeset(attrs)
-      |> Repo.insert()
-    end
+  """
+  def create_episode(attrs \\ %{}) do
+    %Episode{}
+    |> Episode.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
