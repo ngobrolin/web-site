@@ -1,7 +1,7 @@
 defmodule Ngobrolin.Youtube do
   @moduledoc """
   Fetches and processes YouTube video data using YouTube API v3.
-  
+
   This module handles syncing YouTube videos to the database, downloading
   videos as audio files, and uploading them to S3.
   """
@@ -35,12 +35,13 @@ defmodule Ngobrolin.Youtube do
     api_key = Keyword.get(opts, :api_key, api_key_from_env())
     http_client = Keyword.get(opts, :http_client, &default_http_client/2)
     repo = Keyword.get(opts, :repo, Repo)
-    
+
     with {:ok, videos} <- fetch_videos(playlist_id, api_key: api_key, http_client: http_client),
          video_ids = extract_video_ids(videos),
          existing_video_ids = get_existing_video_ids(repo),
          new_video_ids = filter_new_video_ids(video_ids, existing_video_ids),
-         {:ok, durations_map} <- fetch_all_video_durations(video_ids, api_key: api_key, http_client: http_client),
+         {:ok, durations_map} <-
+           fetch_all_video_durations(video_ids, api_key: api_key, http_client: http_client),
          :ok <- insert_new_episodes(videos, new_video_ids, durations_map, repo: repo) do
       {:ok, new_video_ids}
     else
@@ -65,7 +66,7 @@ defmodule Ngobrolin.Youtube do
   def fetch_videos(playlist_id, opts \\ []) do
     api_key = Keyword.get(opts, :api_key, api_key_from_env())
     http_client = Keyword.get(opts, :http_client, &default_http_client/2)
-    
+
     do_fetch_videos(playlist_id, api_key, http_client)
   end
 
@@ -115,7 +116,7 @@ defmodule Ngobrolin.Youtube do
   """
   def youtube_urls(opts \\ []) do
     content_api = Keyword.get(opts, :content_api, Content)
-    
+
     content_api.list_new_episodes()
     |> Enum.map(fn episode ->
       {episode, youtube_url(episode.youtube_id)}
@@ -137,11 +138,11 @@ defmodule Ngobrolin.Youtube do
   def download_new_episodes(opts \\ []) do
     content_api = Keyword.get(opts, :content_api, Content)
     downloader = Keyword.get(opts, :downloader, &schedule_episode_download/1)
-    
+
     episode_urls = youtube_urls(content_api: content_api)
-    
+
     Enum.each(episode_urls, downloader)
-    
+
     {:ok, length(episode_urls)}
   end
 
@@ -160,8 +161,8 @@ defmodule Ngobrolin.Youtube do
   def schedule_episode_download({episode, url}, opts \\ []) do
     task_supervisor = Keyword.get(opts, :task_supervisor, Task)
     download_fn = Keyword.get(opts, :download_fn, &download_episode/1)
-    
-    task_supervisor.async(fn -> 
+
+    task_supervisor.async(fn ->
       download_fn.({episode, url})
     end)
   end
@@ -181,11 +182,11 @@ defmodule Ngobrolin.Youtube do
   def upload_audio(opts \\ []) do
     content_api = Keyword.get(opts, :content_api, Content)
     uploader = Keyword.get(opts, :uploader, &upload_single_audio/1)
-    
+
     episodes = content_api.list_new_audio()
-    
+
     Enum.each(episodes, uploader)
-    
+
     {:ok, length(episodes)}
   end
 
@@ -207,9 +208,9 @@ defmodule Ngobrolin.Youtube do
     file_reader = Keyword.get(opts, :file_reader, &File.read!/1)
     s3_uploader = Keyword.get(opts, :s3_uploader, &upload_to_s3/2)
     status_updater = Keyword.get(opts, :status_updater, &update_episode_status/2)
-    
+
     audio_path = "#{@audio_dir}/#{episode.youtube_id}.mp3"
-    
+
     with {:ok, body} <- safe_read_file(audio_path, file_reader),
          :ok <- s3_uploader.(episode.youtube_id, body),
          {:ok, updated_episode} <- status_updater.(episode, "uploaded") do
@@ -236,11 +237,11 @@ defmodule Ngobrolin.Youtube do
   def upload_to_s3(youtube_id, body, opts \\ []) do
     bucket = Keyword.get(opts, :bucket, @s3_bucket_name)
     s3_client = Keyword.get(opts, :s3_client, ExAws.S3)
-    
+
     try do
       s3_client.put_object(bucket, "#{youtube_id}.mp3", body, acl: :public_read)
       |> ExAws.request!()
-      
+
       :ok
     rescue
       e -> {:error, e}
@@ -323,8 +324,8 @@ defmodule Ngobrolin.Youtube do
     api_key = Keyword.get(opts, :api_key, api_key_from_env())
     http_client = Keyword.get(opts, :http_client, &default_http_client/2)
     chunk_size = Keyword.get(opts, :chunk_size, 50)
-    
-    result = 
+
+    result =
       video_ids
       |> Enum.chunk_every(chunk_size)
       |> Enum.reduce_while({:ok, %{}}, fn batch, {:ok, acc} ->
@@ -333,7 +334,7 @@ defmodule Ngobrolin.Youtube do
           {:error, reason} -> {:halt, {:error, reason}}
         end
       end)
-      
+
     result
   end
 
@@ -352,13 +353,13 @@ defmodule Ngobrolin.Youtube do
   """
   def insert_new_episodes(videos, new_video_ids, durations_map, opts \\ []) do
     repo = Keyword.get(opts, :repo, Repo)
-    
+
     Enum.each(new_video_ids, fn video_id ->
       with video when not is_nil(video) <- Enum.find(videos, fn v -> v.video_id == video_id end) do
         insert_episode(video, durations_map, repo)
       end
     end)
-    
+
     :ok
   end
 
@@ -394,8 +395,10 @@ defmodule Ngobrolin.Youtube do
 
   defp parse_published_at(item) do
     case get_in(item, ["contentDetails", "videoPublishedAt"]) do
-      nil -> {:error, :no_published_at}
-      datetime_string -> 
+      nil ->
+        {:error, :no_published_at}
+
+      datetime_string ->
         case NaiveDateTime.from_iso8601(datetime_string) do
           {:ok, datetime} -> {:ok, datetime}
           error -> error
@@ -419,20 +422,22 @@ defmodule Ngobrolin.Youtube do
   defp download_episode({episode, url}) do
     try do
       output_path = "#{@audio_dir}/#{episode.youtube_id}.mp3"
-      
-      result = System.cmd("yt-dlp", [
-        "-x",
-        "--audio-format",
-        "mp3",
-        "-o",
-        output_path,
-        url
-      ])
-      
+
+      result =
+        System.cmd("yt-dlp", [
+          "-x",
+          "--audio-format",
+          "mp3",
+          "-o",
+          output_path,
+          url
+        ])
+
       case result do
-        {_output, 0} -> 
+        {_output, 0} ->
           update_episode_status(episode, "downloaded")
-        {error, code} -> 
+
+        {error, code} ->
           {:error, "Download failed with code #{code}: #{error}"}
       end
     rescue
@@ -443,13 +448,14 @@ defmodule Ngobrolin.Youtube do
   defp do_fetch_videos(playlist_id, api_key, http_client, page_token \\ nil, acc \\ []) do
     url = "#{@youtube_api_base_url}/playlistItems"
 
-    params = URI.encode_query(%{
-      part: "snippet,contentDetails",
-      playlistId: playlist_id,
-      maxResults: 50,
-      key: api_key,
-      pageToken: page_token
-    })
+    params =
+      URI.encode_query(%{
+        part: "snippet,contentDetails",
+        playlistId: playlist_id,
+        maxResults: 50,
+        key: api_key,
+        pageToken: page_token
+      })
 
     full_url = "#{url}?#{params}"
 
@@ -477,25 +483,29 @@ defmodule Ngobrolin.Youtube do
   defp fetch_video_durations_batch(video_ids, api_key, http_client) do
     url = "#{@youtube_api_base_url}/videos"
 
-    params = URI.encode_query(%{
-      part: "contentDetails", 
-      id: Enum.join(video_ids, ","), 
-      key: api_key
-    })
+    params =
+      URI.encode_query(%{
+        part: "contentDetails",
+        id: Enum.join(video_ids, ","),
+        key: api_key
+      })
 
     full_url = "#{url}?#{params}"
 
     case http_client.(full_url, []) do
       {:ok, %{status: 200, body: body}} ->
         data = Jason.decode!(body)
-        
+
         case Map.get(data, "items") do
-          nil -> 
+          nil ->
             {:error, :missing_items}
+
           items ->
-            durations = Enum.into(items, %{}, fn item ->
-              {item["id"], parse_duration(get_in(item, ["contentDetails", "duration"]))}
-            end)
+            durations =
+              Enum.into(items, %{}, fn item ->
+                {item["id"], parse_duration(get_in(item, ["contentDetails", "duration"]))}
+              end)
+
             {:ok, durations}
         end
 
@@ -509,16 +519,19 @@ defmodule Ngobrolin.Youtube do
 
   defp parse_duration(nil), do: 0
   defp parse_duration(""), do: 0
+
   defp parse_duration(duration_string) do
     regex = ~r/^PT((?<hours>\d+)H)?((?<minutes>\d+)M)?((?<seconds>\d+)S)?$/
 
     case Regex.named_captures(regex, duration_string) do
-      nil -> 0
+      nil ->
+        0
+
       %{"hours" => h, "minutes" => m, "seconds" => s} ->
         hours = if h == "", do: 0, else: String.to_integer(h)
         minutes = if m == "", do: 0, else: String.to_integer(m)
         seconds = if s == "", do: 0, else: String.to_integer(s)
-        
+
         hours * 3600 + minutes * 60 + seconds
     end
   end

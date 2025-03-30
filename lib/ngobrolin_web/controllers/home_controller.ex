@@ -3,6 +3,12 @@ defmodule NgobrolinWeb.HomeController do
 
   alias Ngobrolin.{Content, Youtube}
 
+  def webmanifest(conn, _params) do
+    conn
+    |> put_resp_content_type("application/manifest+json")
+    |> send_file(200, "priv/static/site.webmanifest")
+  end
+
   def sync(conn, _params) do
     Youtube.sync(Application.get_env(:ngobrolin, :playlist_id))
 

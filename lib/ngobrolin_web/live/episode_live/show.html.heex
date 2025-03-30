@@ -10,13 +10,15 @@
           {@episode.title}
         </h1>
         <div class="flex items-center gap-4 text-sm text-zinc-300">
-        <!--
+          <!--
           <span>
             <.icon name="hero-eye" class="w-4 h-4 inline mr-1" /> {@episode.view_count} views
           </span>
           -->
           <span>
-            <.icon name="hero-clock" class="w-4 h-4 inline mr-1" /> {format_duration(@episode.duration)}
+            <.icon name="hero-clock" class="w-4 h-4 inline mr-1" /> {format_duration(
+              @episode.duration
+            )}
           </span>
         </div>
       </div>
@@ -39,7 +41,7 @@
         </div>
       </div>
       
-      <!-- Show Notes -->
+<!-- Show Notes -->
       <div class="border-4 border-white bg-zinc-800 p-6 mb-8 transform -rotate-1">
         <h2 class="text-2xl font-black tracking-tighter mb-4 transform rotate-1">CATATAN</h2>
         <div class="text-zinc-300 leading-relaxed whitespace-pre-wrap">
@@ -47,7 +49,7 @@
         </div>
       </div>
       
-      <!-- Share Buttons -->
+<!-- Share Buttons -->
       <div class="flex gap-4">
         <button class="px-8 py-3 text-lg font-bold border-4 hover:bg-white hover:text-zinc-900 border-white bg-transparent transform transition-transform hover:scale-105">
           <div class="flex items-center gap-2">

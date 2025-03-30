@@ -34,6 +34,7 @@ defmodule NgobrolinWeb.Router do
     live "/request", TopicRequestLive
 
     get "/sync", HomeController, :sync
+    get "/site.webmanifest", HomeController, :webmanifest
   end
 
   # Other scopes may use custom stacks.
