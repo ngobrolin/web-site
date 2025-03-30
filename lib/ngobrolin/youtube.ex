@@ -1,25 +1,71 @@
 defmodule Ngobrolin.Youtube do
   @moduledoc """
-    Fetches YouTube video data from playlist id with YouTube API v3.
+  Fetches and processes YouTube video data using YouTube API v3.
+  
+  This module handles syncing YouTube videos to the database, downloading
+  videos as audio files, and uploading them to S3.
   """
 
   import Ecto.Query
   alias Ngobrolin.Content.Episode
   alias Ngobrolin.Content
+  alias Ngobrolin.Repo
+
+  @youtube_api_base_url "https://www.googleapis.com/youtube/v3"
+  @s3_bucket_name "ngweb-assets"
+  @audio_dir "./priv/static/audio"
+
+  # API Functions
 
   @doc """
-  Fetches videos from a YouTube playlist using the YouTube API.
+  Synchronizes videos from a YouTube playlist to the database.
+
+  ## Parameters
+    - playlist_id: The ID of the YouTube playlist to sync
+    - opts: Optional parameters
+      - api_key: YouTube API key (defaults to environment variable)
+      - http_client: HTTP client function (defaults to Finch)
+      - repo: Repository module (defaults to Ngobrolin.Repo)
+      
+  ## Returns
+    - {:ok, new_video_ids} on success
+    - {:error, reason} on failure
+  """
+  def sync(playlist_id, opts \\ []) do
+    api_key = Keyword.get(opts, :api_key, api_key_from_env())
+    http_client = Keyword.get(opts, :http_client, &default_http_client/2)
+    repo = Keyword.get(opts, :repo, Repo)
+    
+    with {:ok, videos} <- fetch_videos(playlist_id, api_key: api_key, http_client: http_client),
+         video_ids = extract_video_ids(videos),
+         existing_video_ids = get_existing_video_ids(repo),
+         new_video_ids = filter_new_video_ids(video_ids, existing_video_ids),
+         {:ok, durations_map} <- fetch_all_video_durations(video_ids, api_key: api_key, http_client: http_client),
+         :ok <- insert_new_episodes(videos, new_video_ids, durations_map, repo: repo) do
+      {:ok, new_video_ids}
+    else
+      {:error, reason} -> {:error, reason}
+      error -> {:error, error}
+    end
+  end
+
+  @doc """
+  Fetches videos from a YouTube playlist.
 
   ## Parameters
     - playlist_id: The ID of the YouTube playlist to fetch videos from
-    - opts: Optional parameters, including :http_client for testing
-    
+    - opts: Optional parameters
+      - api_key: YouTube API key (defaults to environment variable)
+      - http_client: HTTP client function (defaults to Finch)
+      
   ## Returns
-    List of video data structures or {:error, reason}
+    - {:ok, videos} on success where videos is a list of video data structures
+    - {:error, reason} on failure
   """
   def fetch_videos(playlist_id, opts \\ []) do
-    api_key = System.get_env("YOUTUBE_API_KEY")
+    api_key = Keyword.get(opts, :api_key, api_key_from_env())
     http_client = Keyword.get(opts, :http_client, &default_http_client/2)
+    
     do_fetch_videos(playlist_id, api_key, http_client)
   end
 
@@ -27,91 +73,197 @@ defmodule Ngobrolin.Youtube do
   Parses the response from the YouTube API.
 
   ## Parameters
-    - items: The "items" field from the YouTube API response
+    - response: The response map from the YouTube API
     
   ## Returns
-    List of maps containing video details
+    - List of maps containing video details
   """
   def parse_response(%{"items" => items}) do
     Enum.map(items, fn item ->
-      published_at =
-        item["contentDetails"]["videoPublishedAt"]
-        |> NaiveDateTime.from_iso8601!()
-
-      %{
-        title: item["snippet"]["title"],
-        description: item["snippet"]["description"],
-        thumbnail: item["snippet"]["thumbnails"]["standard"]["url"],
-        video_id: item["snippet"]["resourceId"]["videoId"],
-        published_at: published_at,
-        episode_number: (item["snippet"]["position"] || 0) + 1
-      }
+      with {:ok, published_at} <- parse_published_at(item),
+           title <- get_in(item, ["snippet", "title"]),
+           description <- get_in(item, ["snippet", "description"]),
+           thumbnail <- get_in(item, ["snippet", "thumbnails", "standard", "url"]),
+           video_id <- get_in(item, ["snippet", "resourceId", "videoId"]),
+           position <- get_in(item, ["snippet", "position"]) || 0 do
+        %{
+          title: title,
+          description: description,
+          thumbnail: thumbnail,
+          video_id: video_id,
+          published_at: published_at,
+          episode_number: position + 1
+        }
+      else
+        _error -> nil
+      end
     end)
+    |> Enum.reject(&is_nil/1)
   end
 
-  @doc """
-  Synchronizes videos from a YouTube playlist to the database.
-
-  ## Parameters
-    - playlist_id: The ID of the YouTube playlist to sync
-    
-  ## Returns
-    List of video IDs that were newly added to the database
-  """
-  def sync(playlist_id) do
-    # Collect all video_ids from the playlist
-    videos = fetch_videos(playlist_id)
-    video_ids = extract_video_ids(videos)
-
-    # Get existing videos and find new ones
-    existing_video_ids = get_existing_video_ids()
-    new_video_ids = filter_new_video_ids(video_ids, existing_video_ids)
-
-    # Fetch durations and insert new episodes
-    durations_map = fetch_all_video_durations(video_ids)
-    insert_new_episodes(videos, new_video_ids, durations_map)
-
-    # Return the list of new video_ids
-    new_video_ids
-  end
+  def parse_response(_), do: []
 
   @doc """
   Gets YouTube URLs for new episodes.
 
+  ## Parameters
+    - opts: Optional parameters
+      - content_api: Content API module (defaults to Ngobrolin.Content)
+      
   ## Returns
-    List of tuples containing {episode, youtube_url}
+    - List of tuples containing {episode, youtube_url}
   """
-  def youtube_urls() do
-    episodes = Content.list_new_episodes()
-
-    Enum.map(episodes, fn episode ->
-      {episode, "https://www.youtube.com/watch?v=#{episode.youtube_id}"}
+  def youtube_urls(opts \\ []) do
+    content_api = Keyword.get(opts, :content_api, Content)
+    
+    content_api.list_new_episodes()
+    |> Enum.map(fn episode ->
+      {episode, youtube_url(episode.youtube_id)}
     end)
   end
 
   @doc """
   Downloads all new episodes that need to be downloaded.
 
-  ## Side effects
-    Initiates download tasks for new episodes
+  ## Parameters
+    - opts: Optional parameters
+      - content_api: Content API module (defaults to Ngobrolin.Content)
+      - downloader: Download function (defaults to schedule_episode_download)
+      
+  ## Returns
+    - {:ok, count} on success where count is the number of episodes scheduled for download
+    - {:error, reason} on failure
   """
-  def download_new_episodes() do
-    youtube_urls()
-    |> Enum.each(&schedule_episode_download/1)
+  def download_new_episodes(opts \\ []) do
+    content_api = Keyword.get(opts, :content_api, Content)
+    downloader = Keyword.get(opts, :downloader, &schedule_episode_download/1)
+    
+    episode_urls = youtube_urls(content_api: content_api)
+    
+    Enum.each(episode_urls, downloader)
+    
+    {:ok, length(episode_urls)}
+  end
+
+  @doc """
+  Schedules an episode for download.
+
+  ## Parameters
+    - {episode, url}: Tuple of episode and YouTube URL
+    - opts: Optional parameters
+      - task_supervisor: Task supervisor module (defaults to Task)
+      - download_fn: Download function (defaults to download_episode)
+      
+  ## Returns
+    - Task reference
+  """
+  def schedule_episode_download({episode, url}, opts \\ []) do
+    task_supervisor = Keyword.get(opts, :task_supervisor, Task)
+    download_fn = Keyword.get(opts, :download_fn, &download_episode/1)
+    
+    task_supervisor.async(fn -> 
+      download_fn.({episode, url})
+    end)
   end
 
   @doc """
   Uploads all downloaded audio files to S3.
 
-  ## Side effects
-    Uploads files to S3 and updates episode status
+  ## Parameters
+    - opts: Optional parameters
+      - content_api: Content API module (defaults to Ngobrolin.Content)
+      - uploader: Upload function (defaults to upload_single_audio)
+      
+  ## Returns
+    - {:ok, count} on success where count is the number of episodes uploaded
+    - {:error, reason} on failure
   """
-  def upload_audio() do
-    Content.list_new_audio()
-    |> Enum.each(&upload_single_audio/1)
+  def upload_audio(opts \\ []) do
+    content_api = Keyword.get(opts, :content_api, Content)
+    uploader = Keyword.get(opts, :uploader, &upload_single_audio/1)
+    
+    episodes = content_api.list_new_audio()
+    
+    Enum.each(episodes, uploader)
+    
+    {:ok, length(episodes)}
   end
 
-  # New functions for better single responsibility
+  @doc """
+  Uploads a single audio file to S3.
+
+  ## Parameters
+    - episode: Episode struct with youtube_id
+    - opts: Optional parameters
+      - file_reader: File reading function (defaults to File.read!)
+      - s3_uploader: S3 upload function (defaults to upload_to_s3)
+      - status_updater: Status update function (defaults to update_episode_status)
+      
+  ## Returns
+    - {:ok, updated_episode} on success
+    - {:error, reason} on failure
+  """
+  def upload_single_audio(episode, opts \\ []) do
+    file_reader = Keyword.get(opts, :file_reader, &File.read!/1)
+    s3_uploader = Keyword.get(opts, :s3_uploader, &upload_to_s3/2)
+    status_updater = Keyword.get(opts, :status_updater, &update_episode_status/2)
+    
+    audio_path = "#{@audio_dir}/#{episode.youtube_id}.mp3"
+    
+    with {:ok, body} <- safe_read_file(audio_path, file_reader),
+         :ok <- s3_uploader.(episode.youtube_id, body),
+         {:ok, updated_episode} <- status_updater.(episode, "uploaded") do
+      {:ok, updated_episode}
+    else
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  @doc """
+  Uploads a file to S3.
+
+  ## Parameters
+    - youtube_id: YouTube ID to use as the filename
+    - body: File content to upload
+    - opts: Optional parameters
+      - bucket: S3 bucket name (defaults to @s3_bucket_name)
+      - s3_client: S3 client module (defaults to ExAws.S3)
+      
+  ## Returns
+    - :ok on success
+    - {:error, reason} on failure
+  """
+  def upload_to_s3(youtube_id, body, opts \\ []) do
+    bucket = Keyword.get(opts, :bucket, @s3_bucket_name)
+    s3_client = Keyword.get(opts, :s3_client, ExAws.S3)
+    
+    try do
+      s3_client.put_object(bucket, "#{youtube_id}.mp3", body, acl: :public_read)
+      |> ExAws.request!()
+      
+      :ok
+    rescue
+      e -> {:error, e}
+    end
+  end
+
+  @doc """
+  Updates the status of an episode.
+
+  ## Parameters
+    - episode: Episode struct to update
+    - status: New status string
+    - content_api: Content API module (defaults to Ngobrolin.Content)
+    
+  ## Returns
+    - {:ok, updated_episode} on success
+    - {:error, changeset} on failure
+  """
+  def update_episode_status(episode, status, content_api \\ Content) do
+    content_api.update_episode(episode, %{status: status})
+  end
+
+  # Data Transformation Functions
 
   @doc """
   Extracts video IDs from a list of video data.
@@ -120,7 +272,7 @@ defmodule Ngobrolin.Youtube do
     - videos: List of video data structures
     
   ## Returns
-    List of video IDs
+    - List of video IDs
   """
   def extract_video_ids(videos) do
     Enum.map(videos, & &1.video_id)
@@ -129,11 +281,14 @@ defmodule Ngobrolin.Youtube do
   @doc """
   Gets a list of existing video IDs from the database.
 
+  ## Parameters
+    - repo: Repository module (defaults to Ngobrolin.Repo)
+    
   ## Returns
-    List of YouTube video IDs that are already in the database
+    - List of YouTube video IDs that are already in the database
   """
-  def get_existing_video_ids() do
-    Ngobrolin.Repo.all(from e in Episode, select: e.youtube_id)
+  def get_existing_video_ids(repo \\ Repo) do
+    repo.all(from e in Episode, select: e.youtube_id)
   end
 
   @doc """
@@ -144,7 +299,7 @@ defmodule Ngobrolin.Youtube do
     - existing_video_ids: List of existing video IDs
     
   ## Returns
-    List of new video IDs not yet in the database
+    - List of new video IDs not yet in the database
   """
   def filter_new_video_ids(video_ids, existing_video_ids) do
     video_ids -- existing_video_ids
@@ -155,14 +310,31 @@ defmodule Ngobrolin.Youtube do
 
   ## Parameters
     - video_ids: List of video IDs to fetch durations for
-    
+    - opts: Optional parameters
+      - api_key: YouTube API key (defaults to environment variable)
+      - http_client: HTTP client function (defaults to Finch)
+      - chunk_size: Number of videos per request (defaults to 50)
+      
   ## Returns
-    Map of video_id to duration in seconds
+    - {:ok, durations_map} on success where durations_map maps video_id to duration in seconds
+    - {:error, reason} on failure
   """
-  def fetch_all_video_durations(video_ids) do
-    api_key = System.get_env("YOUTUBE_API_KEY")
-    http_client = &default_http_client/2
-    fetch_video_durations(video_ids, api_key, http_client)
+  def fetch_all_video_durations(video_ids, opts \\ []) do
+    api_key = Keyword.get(opts, :api_key, api_key_from_env())
+    http_client = Keyword.get(opts, :http_client, &default_http_client/2)
+    chunk_size = Keyword.get(opts, :chunk_size, 50)
+    
+    result = 
+      video_ids
+      |> Enum.chunk_every(chunk_size)
+      |> Enum.reduce_while({:ok, %{}}, fn batch, {:ok, acc} ->
+        case fetch_video_durations_batch(batch, api_key, http_client) do
+          {:ok, batch_result} -> {:cont, {:ok, Map.merge(acc, batch_result)}}
+          {:error, reason} -> {:halt, {:error, reason}}
+        end
+      end)
+      
+    result
   end
 
   @doc """
@@ -172,15 +344,22 @@ defmodule Ngobrolin.Youtube do
     - videos: List of video data structures
     - new_video_ids: List of video IDs to insert
     - durations_map: Map of video_id to duration in seconds
+    - opts: Optional parameters
+      - repo: Repository module (defaults to Ngobrolin.Repo)
     
-  ## Side effects
-    Inserts records into the database
+  ## Returns
+    - :ok on success
   """
-  def insert_new_episodes(videos, new_video_ids, durations_map) do
+  def insert_new_episodes(videos, new_video_ids, durations_map, opts \\ []) do
+    repo = Keyword.get(opts, :repo, Repo)
+    
     Enum.each(new_video_ids, fn video_id ->
-      video = Enum.find(videos, fn v -> v.video_id == video_id end)
-      insert_episode(video, durations_map)
+      with video when not is_nil(video) <- Enum.find(videos, fn v -> v.video_id == video_id end) do
+        insert_episode(video, durations_map, repo)
+      end
     end)
+    
+    :ok
   end
 
   @doc """
@@ -189,15 +368,13 @@ defmodule Ngobrolin.Youtube do
   ## Parameters
     - video: Video data structure
     - durations_map: Map of video_id to duration in seconds
+    - repo: Repository module (defaults to Ngobrolin.Repo)
     
   ## Returns
-    The inserted Episode struct
-    
-  ## Side effects
-    Inserts a record into the database
+    - The inserted Episode struct
   """
-  def insert_episode(video, durations_map) do
-    Ngobrolin.Repo.insert!(%Episode{
+  def insert_episode(video, durations_map, repo \\ Repo) do
+    %Episode{
       youtube_id: video.video_id,
       title: video.title,
       description: video.description,
@@ -205,97 +382,74 @@ defmodule Ngobrolin.Youtube do
       published_at: video.published_at,
       status: "",
       duration: Map.get(durations_map, video.video_id)
-    })
+    }
+    |> repo.insert!()
   end
 
-  @doc """
-  Schedules an episode for download.
+  # Private helper functions
 
-  ## Parameters
-    - {episode, url}: Tuple of episode and YouTube URL
-    
-  ## Side effects
-    Starts an asynchronous download task
-  """
-  def schedule_episode_download({episode, url}) do
-    download_episode({episode, url})
+  defp api_key_from_env do
+    System.get_env("YOUTUBE_API_KEY")
   end
 
-  @doc """
-  Uploads a single audio file to S3.
-
-  ## Parameters
-    - episode: Episode struct with youtube_id
-    
-  ## Side effects
-    Uploads file to S3 and updates episode status
-  """
-  def upload_single_audio(episode) do
-    audio_path = "./priv/static/audio/#{episode.youtube_id}.mp3"
-    body = File.read!(audio_path)
-
-    IO.puts("Uploading #{episode.youtube_id}...")
-
-    upload_to_s3(episode.youtube_id, body)
-    update_episode_status(episode, "uploaded")
+  defp parse_published_at(item) do
+    case get_in(item, ["contentDetails", "videoPublishedAt"]) do
+      nil -> {:error, :no_published_at}
+      datetime_string -> 
+        case NaiveDateTime.from_iso8601(datetime_string) do
+          {:ok, datetime} -> {:ok, datetime}
+          error -> error
+        end
+    end
   end
 
-  @doc """
-  Uploads a file to S3.
-
-  ## Parameters
-    - youtube_id: YouTube ID to use as the filename
-    - body: File content to upload
-    
-  ## Side effects
-    Uploads file to S3
-  """
-  def upload_to_s3(youtube_id, body) do
-    ExAws.S3.put_object("ngweb-assets", "#{youtube_id}.mp3", body, acl: :public_read)
-    |> ExAws.request!()
+  defp youtube_url(video_id) do
+    "https://www.youtube.com/watch?v=#{video_id}"
   end
 
-  @doc """
-  Updates the status of an episode.
-
-  ## Parameters
-    - episode: Episode struct to update
-    - status: New status string
-    
-  ## Returns
-    Updated Episode struct
-    
-  ## Side effects
-    Updates record in database
-  """
-  def update_episode_status(episode, status) do
-    Content.update_episode(episode, %{status: status})
+  defp safe_read_file(path, file_reader) do
+    try do
+      {:ok, file_reader.(path)}
+    rescue
+      e in File.Error -> {:error, e.reason}
+      e -> {:error, e}
+    end
   end
 
-  # Private functions below
+  defp download_episode({episode, url}) do
+    try do
+      output_path = "#{@audio_dir}/#{episode.youtube_id}.mp3"
+      
+      result = System.cmd("yt-dlp", [
+        "-x",
+        "--audio-format",
+        "mp3",
+        "-o",
+        output_path,
+        url
+      ])
+      
+      case result do
+        {_output, 0} -> 
+          update_episode_status(episode, "downloaded")
+        {error, code} -> 
+          {:error, "Download failed with code #{code}: #{error}"}
+      end
+    rescue
+      e -> {:error, "Download error: #{inspect(e)}"}
+    end
+  end
 
-  @doc false
-  # Fetches videos from a YouTube playlist with pagination support
-  #
-  # Parameters:
-  #   - playlist_id: The ID of the YouTube playlist to fetch videos from
-  #   - api_key: YouTube API key
-  #   - http_client: HTTP client function
-  #   - page_token: Token for pagination (nil for first page)
-  #   - acc: Accumulated results from previous pages
-  #
-  # Returns: List of video data structures or {:error, reason}
   defp do_fetch_videos(playlist_id, api_key, http_client, page_token \\ nil, acc \\ []) do
-    url = "https://www.googleapis.com/youtube/v3/playlistItems"
+    url = "#{@youtube_api_base_url}/playlistItems"
 
-    params =
-      URI.encode_query(%{
-        part: "snippet,contentDetails",
-        playlistId: playlist_id,
-        maxResults: 50,
-        key: api_key,
-        pageToken: page_token
-      })
+    params = URI.encode_query(%{
+      part: "snippet,contentDetails",
+      playlistId: playlist_id,
+      maxResults: 50,
+      key: api_key,
+      pageToken: page_token
+    })
 
     full_url = "#{url}?#{params}"
 
@@ -306,111 +460,69 @@ defmodule Ngobrolin.Youtube do
         next_token = Map.get(data, "nextPageToken")
         new_acc = acc ++ items
 
-        if next_token,
-          do: do_fetch_videos(playlist_id, api_key, http_client, next_token, new_acc),
-          else: new_acc
+        if next_token do
+          do_fetch_videos(playlist_id, api_key, http_client, next_token, new_acc)
+        else
+          {:ok, new_acc}
+        end
+
+      {:ok, %{status: status, body: body}} ->
+        {:error, {status, body}}
 
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  @doc false
-  # Downloads an episode from YouTube using yt-dlp
-  # 
-  # Parameters:
-  #   - {episode, url}: Tuple of episode struct and YouTube URL
-  defp download_episode({episode, url}) do
-    Task.async(fn ->
-      IO.puts("Downloading #{episode.youtube_id}: #{url}")
-      # Download audio version using yt-dlp cli
-      System.cmd("yt-dlp", [
-        "-x",
-        "--audio-format",
-        "mp3",
-        "-o",
-        "./priv/static/audio/#{episode.youtube_id}.mp3",
-        url
-      ])
-
-      Content.update_episode(episode, %{status: "downloaded"})
-    end)
-  end
-
-  @doc false
-  # Fetches video durations for a batch of videos
-  #
-  # Parameters:
-  #   - video_ids: List of video IDs to get durations for
-  #   - api_key: YouTube API key
-  #   - http_client: HTTP client function
-  #
-  # Returns: Map of video_id to duration in seconds
-  defp fetch_video_durations(video_ids, api_key, http_client) do
-    # Batch video IDs in chunks of 50 (YouTube API limit)
-    video_ids
-    |> chunk_video_ids(50)
-    |> Enum.reduce(%{}, fn batch, acc ->
-      batch_result = fetch_video_durations_batch(batch, api_key, http_client)
-      Map.merge(acc, batch_result)
-    end)
-  end
-
-  @doc false
-  # Fetches video durations for a single batch of videos (max 50 IDs)
   defp fetch_video_durations_batch(video_ids, api_key, http_client) do
-    url = "https://www.googleapis.com/youtube/v3/videos"
+    url = "#{@youtube_api_base_url}/videos"
 
-    params =
-      URI.encode_query(%{part: "contentDetails", id: Enum.join(video_ids, ","), key: api_key})
+    params = URI.encode_query(%{
+      part: "contentDetails", 
+      id: Enum.join(video_ids, ","), 
+      key: api_key
+    })
 
     full_url = "#{url}?#{params}"
 
     case http_client.(full_url, []) do
       {:ok, %{status: 200, body: body}} ->
-        %{"items" => items} = Jason.decode!(body)
-
-        Enum.into(items, %{}, fn item ->
-          {item["id"], parse_duration(item["contentDetails"]["duration"])}
-        end)
+        data = Jason.decode!(body)
+        
+        case Map.get(data, "items") do
+          nil -> 
+            {:error, :missing_items}
+          items ->
+            durations = Enum.into(items, %{}, fn item ->
+              {item["id"], parse_duration(get_in(item, ["contentDetails", "duration"]))}
+            end)
+            {:ok, durations}
+        end
 
       {:ok, %{status: status, body: body}} ->
-        IO.puts("YouTube API error (status #{status}): #{body}")
-        %{}
+        {:error, {status, body}}
 
-      _error ->
-        %{}
+      error ->
+        {:error, error}
     end
   end
 
-  @doc false
-  # Splits video IDs into chunks of specified size
-  defp chunk_video_ids(video_ids, chunk_size) do
-    video_ids
-    |> Enum.chunk_every(chunk_size)
-  end
-
-  @doc false
-  # Parses ISO 8601 duration format to seconds
   defp parse_duration(nil), do: 0
   defp parse_duration(""), do: 0
-
   defp parse_duration(duration_string) do
     regex = ~r/^PT((?<hours>\d+)H)?((?<minutes>\d+)M)?((?<seconds>\d+)S)?$/
 
     case Regex.named_captures(regex, duration_string) do
-      nil ->
-        0
-
+      nil -> 0
       %{"hours" => h, "minutes" => m, "seconds" => s} ->
-        String.to_integer(if h == "", do: "0", else: h) * 3600 +
-          String.to_integer(if m == "", do: "0", else: m) * 60 +
-          String.to_integer(if s == "", do: "0", else: s)
+        hours = if h == "", do: 0, else: String.to_integer(h)
+        minutes = if m == "", do: 0, else: String.to_integer(m)
+        seconds = if s == "", do: 0, else: String.to_integer(s)
+        
+        hours * 3600 + minutes * 60 + seconds
     end
   end
 
-  @doc false
-  # Default HTTP client implementation using Finch
   defp default_http_client(url, headers) do
     Finch.build(:get, url, headers)
     |> Finch.request(Ngobrolin.Finch)
