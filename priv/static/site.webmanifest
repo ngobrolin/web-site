@@ -1,0 +1,14 @@
+{
+  "name": "Ngobrolin WEB",
+  "short_name": "Ngobrolin",
+  "icons": [
+    {
+      "src": "/images/logo.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpg"
+    }
+  ],
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}
