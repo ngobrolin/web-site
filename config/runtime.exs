@@ -63,7 +63,7 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
-    check_origin: ["https://127.0.0.1", System.get_env("PHX_HOST")],
+    check_origin: ["http://127.0.0.1", System.get_env("PHX_HOST")],
     secret_key_base: secret_key_base
 
   # ## SSL Support
