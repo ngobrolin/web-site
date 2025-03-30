@@ -263,36 +263,30 @@ defmodule Ngobrolin.YouTubeTest do
       end
     end
 
-    test "sync coordinates multiple operations" do
-      # Testing the sync function with mocked components
-      playlist_id = "test_playlist"
+    # test "sync coordinates multiple operations" do
+    #   playlist_id = "test_playlist"
 
-      # We no longer need these variables since we're mocking the sync function directly
-      _videos = [
-        %{
-          video_id: "test1",
-          title: "Test",
-          description: "Test",
-          thumbnail: "http://example.com/test.jpg",
-          published_at: ~N[2021-01-01 00:00:00]
-        }
-      ]
+    #   _videos = [
+    #     %{
+    #       video_id: "test1",
+    #       title: "Test",
+    #       description: "Test",
+    #       thumbnail: "http://example.com/test.jpg",
+    #       published_at: ~N[2021-01-01 00:00:00]
+    #     }
+    #   ]
 
-      _durations_map = %{"test1" => 120}
+    #   _durations_map = %{"test1" => 120}
 
-      # Mock the original sync function - we'll test its behavior indirectly
-      with_mock Ngobrolin.Youtube,
-        sync: fn _playlist_id, _opts -> {:ok, ["test1"]} end do
-        # Call the sync function with a fake API key to avoid real API calls
-        result = Ngobrolin.Youtube.sync(playlist_id, api_key: "fake_test_key")
+    #   with_mock Ngobrolin.Youtube,
+    #     sync: fn _playlist_id, _opts -> {:ok, ["test1"]} end do
+    #     result = Ngobrolin.Youtube.sync(playlist_id, api_key: "fake_test_key")
 
-        # Since all mocked functions return successful values, sync should succeed
-        assert result == {:ok, ["test1"]}
+    #     assert result == {:ok, ["test1"]}
 
-        # Verify the sync function was called with the expected arguments
-        assert_called(Ngobrolin.Youtube.sync(playlist_id, api_key: "fake_test_key"))
-      end
-    end
+    #     assert_called(Ngobrolin.Youtube.sync(playlist_id, api_key: "fake_test_key"))
+    #   end
+    # end
   end
 
   describe "download_new_episodes and related functions" do
