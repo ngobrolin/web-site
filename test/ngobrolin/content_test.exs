@@ -50,7 +50,7 @@ defmodule Ngobrolin.ContentTest do
     end
 
     test "get_episode_by_youtube_id!/1 raises error if youtube_id not found" do
-      assert Content.get_episode_by_youtube_id!("non_existent_youtube_id") == nil
+      assert_raise Ecto.NoResultsError, fn -> Content.get_episode_by_youtube_id!("non_existent_youtube_id") end
     end
 
     describe "get_episode_by_episode_number!/1" do
@@ -59,8 +59,7 @@ defmodule Ngobrolin.ContentTest do
       setup :episode_fixture # Use the imported fixture function for setup
 
       test "returns the episode with the given episode_number", %{episode: episode} do
-        # Ensure the fixture has an episode_number if not default
-        episode = episode_fixture(episode_number: 123)
+        # The episode from setup should have a valid episode_number
         found_episode = Content.get_episode_by_episode_number!(episode.episode_number)
         assert found_episode.id == episode.id
       end

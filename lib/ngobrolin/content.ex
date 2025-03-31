@@ -88,7 +88,7 @@ defmodule Ngobrolin.Content do
   def get_episode_by_youtube_id!(youtube_id) do
     Episode
     |> where([e], e.youtube_id == ^youtube_id)
-    |> Repo.one()
+    |> Repo.one!() # Changed from Repo.one() to Repo.one!()
   end
 
   @doc """
