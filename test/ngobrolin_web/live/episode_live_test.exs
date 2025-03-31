@@ -15,20 +15,20 @@ defmodule NgobrolinWeb.EpisodeLiveTest do
     test "lists all episodes", %{conn: conn, episode: episode} do
       {:ok, _index_live, html} = live(conn, ~p"/episodes")
 
-      assert html =~ "Listing Episodes"
+      assert html =~ "SEMUA EPISODE" # Updated title
       assert html =~ episode.title
     end
 
     test "navigates to episode page", %{conn: conn, episode: episode} do
       {:ok, index_live, _html} = live(conn, ~p"/episodes")
 
-      {:ok, _show_live, html} =
+      {:ok, show_live, _html} = # Capture the show_live view
         index_live
-        |> element("a[href='/episodes/#{episode.id}']")
+        |> element(~s|a[href="/episodes/#{episode.episode_number}"]|) # Use episode_number in selector
         |> render_click()
-        |> follow_redirect(conn)
+        # No follow_redirect needed for navigate links
 
-      assert html =~ episode.title
+      assert show_live |> rendered() =~ episode.title # Assert on the rendered content of the show page
     end
   end
 
@@ -36,10 +36,10 @@ defmodule NgobrolinWeb.EpisodeLiveTest do
     setup [:create_episode]
 
     test "displays episode", %{conn: conn, episode: episode} do
-      {:ok, _show_live, html} = live(conn, ~p"/episodes/#{episode}")
+      {:ok, _show_live, html} = live(conn, ~p"/episodes/#{episode.episode_number}") # Use episode_number
 
       assert html =~ episode.title
-      assert html =~ episode.description
+      assert html =~ episode.description # Ensure description is checked
     end
   end
 end

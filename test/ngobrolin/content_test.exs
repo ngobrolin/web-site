@@ -53,6 +53,23 @@ defmodule Ngobrolin.ContentTest do
       assert Content.get_episode_by_youtube_id!("non_existent_youtube_id") == nil
     end
 
+    describe "get_episode_by_episode_number!/1" do
+      import Ngobrolin.ContentFixtures
+
+      setup :episode_fixture # Use the imported fixture function for setup
+
+      test "returns the episode with the given episode_number", %{episode: episode} do
+        # Ensure the fixture has an episode_number if not default
+        episode = episode_fixture(episode_number: 123)
+        found_episode = Content.get_episode_by_episode_number!(episode.episode_number)
+        assert found_episode.id == episode.id
+      end
+
+      test "raises if episode with given episode_number does not exist" do
+        assert_raise Ecto.NoResultsError, fn -> Content.get_episode_by_episode_number!(999_999) end
+      end
+    end
+
     test "create_episode/1 with valid data creates a episode" do
       valid_attrs = %{
         status: "some status",

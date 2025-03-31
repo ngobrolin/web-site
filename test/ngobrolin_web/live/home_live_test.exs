@@ -30,6 +30,7 @@ defmodule NgobrolinWeb.HomeLiveTest do
       assert view |> has_element?("img[src='#{episode.thumbnail_url}']")
       assert view |> has_element?("h2", episode.title)
       assert view |> has_element?("div", "30 menit")
+      assert view |> has_element?(~s|a[href="/episodes/#{episode.episode_number}"]|) # Check link uses episode_number
     end
   end
 end
