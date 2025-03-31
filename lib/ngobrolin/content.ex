@@ -92,6 +92,22 @@ defmodule Ngobrolin.Content do
   end
 
   @doc """
+  Gets a single episode by episode_number.
+  Raises `Ecto.NoResultsError` if the Episode does not exist.
+  ## Examples
+
+      iex> get_episode_by_episode_number!(10)
+      %Episode{}
+
+      iex> get_episode_by_episode_number!(999)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_episode_by_episode_number!(episode_number) do
+    Repo.get_by!(Episode, episode_number: episode_number)
+  end
+
+  @doc """
   Creates a episode. Only available in test environment.
 
   ## Examples
@@ -149,7 +165,7 @@ defmodule Ngobrolin.Content do
   ## Examples
 
       iex> change_episode(episode)
-      %Ecto.Changeset{data: %Episode{}}
+      %Ecto.Changeset{ %Episode{}}
 
   """
   def change_episode(%Episode{} = episode, attrs \\ %{}) do

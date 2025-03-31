@@ -16,8 +16,8 @@ defmodule NgobrolinWeb.EpisodeLive.Show do
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _, socket) do
-    episode = Content.get_episode!(id)
+  def handle_params(%{"episode_number" => episode_number}, _, socket) do
+    episode = Content.get_episode_by_episode_number!(episode_number)
 
     {:noreply,
      socket
@@ -26,9 +26,9 @@ defmodule NgobrolinWeb.EpisodeLive.Show do
   end
 
   defp track_episode_view(params, _url, socket) do
-    if Map.has_key?(params, "id") and connected?(socket) do
+    if Map.has_key?(params, "episode_number") and connected?(socket) do
       # TODO
-      # Content.increment_view_count(params["id"])
+      # Content.increment_view_count(params["episode_number"]) # Or fetch episode and use ID/struct
     end
 
     {:cont, socket}

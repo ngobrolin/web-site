@@ -28,7 +28,7 @@ defmodule NgobrolinWeb.Router do
 
     live "/", HomeLive
     live "/episodes", EpisodeLive.Index, :index
-    live "/episodes/:id", EpisodeLive.Show, :show
+    live "/episodes/:episode_number", EpisodeLive.Show, :show
     live "/about", AboutLive
     live "/sponsor", SponsorshipLive
     live "/request", TopicRequestLive
