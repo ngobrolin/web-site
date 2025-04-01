@@ -22,13 +22,12 @@ defmodule NgobrolinWeb.EpisodeLiveTest do
     test "navigates to episode page", %{conn: conn, episode: episode} do
       {:ok, index_live, _html} = live(conn, ~p"/episodes")
 
-      {:ok, show_live, _html} = # Capture the show_live view
+      {:ok, _index_live_after_click, html_after_click} =
         index_live
         |> element(~s|a[href="/episodes/#{episode.episode_number}"]|) # Use episode_number in selector
         |> render_click()
-        # No follow_redirect needed for navigate links
 
-      assert show_live |> rendered() =~ episode.title # Assert on the rendered content of the show page
+      assert html_after_click =~ episode.title # Assert on the HTML rendered after the navigation click
     end
   end
 
