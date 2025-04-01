@@ -18,7 +18,8 @@ defmodule Ngobrolin.ContentFixtures do
         thumbnail_url: "some thumbnail_url",
         title: "some title",
         view_count: 42,
-        youtube_id: "some youtube_id"
+        youtube_id: "some youtube_id",
+        episode_number: attrs[:episode_number] || 1
       })
       |> Ngobrolin.Content.create_episode()
 
