@@ -35,11 +35,11 @@ defmodule NgobrolinWeb.HomeController do
 
       Topik, tautan dan pertanyaan menarik bisa dilayangkan ke https://bit.ly/ngobrolinweb]]>
           </description>
-          <link>https://ngobrol.in/web</link>
+          <link>https://ngobrolinweb.riza.world</link>
           <image>
           <url><![CDATA[https://ngweb-assets.s3.amazonaws.com/thumbnail-podcast-square.jpg]]></url>
           <title>Ngobrolin WEB</title>
-          <link>https://ngobrol.in/web</link>
+          <link>https://ngobrolinweb.riza.world</link>
           </image>
           <generator>Podcast Creator</generator>
           <lastBuildDate>Tue, 24 Sep 2024 10:27:25 GMT</lastBuildDate>
