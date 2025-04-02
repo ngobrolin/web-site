@@ -26,10 +26,12 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Set up Elixir
-        uses: erlef/setup-elixir@v1.2.1
+        uses: erlef/setup-elixir@v1
         with:
           elixir-version: '1.18'
           otp-version: '27.0'
+          install-hex: true
+          install-rebar: true
 
       - name: Install Dependencies
         run: mix deps.get
