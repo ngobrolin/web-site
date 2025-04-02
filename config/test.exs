@@ -6,12 +6,13 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :ngobrolin, Ngobrolin.Repo,
-  # Note: The url configuration automatically includes the test partition suffix
-  # if MIX_TEST_PARTITION is set, so we don't need to add it manually here.
-  # Ecto will append it if the env var is present.
-  url: System.get_env("DATABASE_URL", "ecto://postgres:postgres@localhost/ngobrolin_test"),
+  username: System.get_env("POSTGRES_USER", "riza"),
+  password: System.get_env("POSTGRES_PASSWORD", "empty"),
+  hostname: System.get_env("POSTGRES_HOSTNAME", "localhost"),
+  database:
+    System.get_env("POSTGRES_DB", "ngobrolin_test#{System.get_env("MIX_TEST_PARTITION")}"),
   pool: Ecto.Adapters.SQL.Sandbox,
-  pool_size: 1 # Keep pool size small for tests
+  pool_size: System.schedulers_online() * 2
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.

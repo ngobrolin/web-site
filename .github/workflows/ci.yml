@@ -38,14 +38,6 @@ jobs:
 
       - name: Prepare DB
         run: mix ecto.create && mix ecto.migrate
-        env:
-          DATABASE_URL: "ecto://postgres:postgres@postgres:5432/ngobrolin_test"
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          
+
       - name: Run Tests
-        run: mix test
-        env:
-          DATABASE_URL: "ecto://postgres:postgres@postgres:5432/ngobrolin_test"
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+        run: MIX_ENV=test mix test
