@@ -37,9 +37,9 @@ jobs:
       - name: Prepare DB
         run: mix ecto.create && mix ecto.migrate
         env:
-          DATABASE_URL: "ecto://postgres:postgres@localhost:5432/ngobrolin_test"
+          DATABASE_URL: "ecto://postgres:postgres@postgres:5432/ngobrolin_test"
           
       - name: Run Tests
         run: mix test
         env:
-          DATABASE_URL: "ecto://postgres:postgres@localhost:5432/ngobrolin_test"
+          DATABASE_URL: "ecto://postgres:postgres@postgres:5432/ngobrolin_test"

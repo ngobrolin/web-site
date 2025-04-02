@@ -2,9 +2,9 @@ import Config
 
 # Configure your database
 config :ngobrolin, Ngobrolin.Repo,
-  username: "postgres",
+  username: "riza",
   password: "postgres",
-  hostname: "postgres",
+  hostname: "localhost",
   database: "ngobrolin_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
