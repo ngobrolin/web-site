@@ -36,6 +36,14 @@ jobs:
 
       - name: Prepare DB
         run: mix ecto.create && mix ecto.migrate
-
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          
       - name: Run Tests
         run: mix test
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
