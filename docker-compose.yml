@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ngobrolin_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    # Make the container interactive and allocate a TTY to see debug output
+    stdin_open: true
+    tty: true
+    environment:
+      # These override the values in config/dev.exs
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: ngobrolin_dev
+      DATABASE_HOST: postgres
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_NAME: ngobrolin_dev
+      # Force colored output in the logs
+      ELIXIR_CLI_COLOR: enabled
+      # Pass through YouTube API key from host environment
+      YOUTUBE_API_KEY: ${YOUTUBE_API_KEY}
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+      - node_modules:/app/assets/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  node_modules:

@@ -37,6 +37,9 @@ npm-debug.log
 
 .envrc
 .DS_Store
+.env
+.env.*
+!.env-example
 
 .tmp/
 

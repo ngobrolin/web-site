@@ -71,11 +71,45 @@ Before running the application, ensure you have the following installed:
 
 ### Starting the Server
 
-To start your Phoenix server:
+#### Local Setup
+To start your Phoenix server locally:
 
   * Run `mix setup` to install and setup dependencies
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
   * Run `mix ecto.migrate` to apply database migrations
+
+#### Docker Development Environment
+To use the Docker development environment with Docker Compose:
+
+1. Copy the example environment file:
+```bash
+cp .env-example .env
+```
+
+2. Edit the `.env` file to add your API keys and credentials
+
+3. Start the application with PostgreSQL:
+```bash
+# Start the application with PostgreSQL
+docker-compose up
+
+# Or build and start in detached mode
+docker-compose up --build -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the services
+docker-compose down
+```
+
+The Docker Compose setup:
+1. Starts a PostgreSQL database
+2. Builds and runs the application using Dockerfile.dev
+3. Connects the app to the database automatically
+4. Mounts your local directory to /app for hot reloading
+5. Exposes the app on port 4000
+6. Preserves PostgreSQL data between restarts
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 

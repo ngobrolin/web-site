@@ -11,14 +11,14 @@ RUN apt-get update && \
     apt-get install -y libssl-dev libncurses5-dev && \
     apt-get clean && \
     # Download and install Erlang
-    wget https://github.com/erlang/otp/releases/download/OTP-27.2.2/otp_src_27.2.2.tar.gz && \
-    tar -xzf otp_src_27.2.2.tar.gz && \
-    cd otp_src_27.2.2 && \
+    wget https://github.com/erlang/otp/releases/download/OTP-25.3.2.8/otp_src_25.3.2.8.tar.gz && \
+    tar -xzf otp_src_25.3.2.8.tar.gz && \
+    cd otp_src_25.3.2.8 && \
     ./configure && \
     make -j$(nproc) && \
     make install && \
     cd .. && \
-    rm -rf otp_src_27.2.2* && \
+    rm -rf otp_src_25.3.2.8* && \
     # Download and install Elixir
     wget https://github.com/elixir-lang/elixir/archive/v1.16.3.tar.gz && \
     tar -xzf v1.16.3.tar.gz && \
@@ -45,6 +45,8 @@ RUN mix local.hex --force && \
 # Set environment variables
 ENV MIX_ENV=dev
 ENV PORT=4000
+ENV ELIXIR_CLI_COLOR=enabled
+ENV ELIXIR_ERL_OPTIONS="-kernel shell_history enabled"
 
 # Expose port
 EXPOSE 4000
@@ -56,18 +58,53 @@ cd /app\n\
 # Clean any previous builds to avoid OTP version conflicts\n\
 rm -rf _build\n\
 \n\
+# Configure database connection\n\
+if [ -n "$DATABASE_HOST" ]; then\n\
+  echo "Using PostgreSQL at $DATABASE_HOST"\n\
+  \n\
+  # Directly update the dev.exs file to use the correct connection info\n\
+  sed -i "s/hostname: \"localhost\"/hostname: \"$DATABASE_HOST\"/" config/dev.exs\n\
+  sed -i "s/username: \"riza\"/username: \"${DATABASE_USER:-postgres}\"/" config/dev.exs\n\
+  sed -i "s/password: \"empty\"/password: \"${DATABASE_PASSWORD:-postgres}\"/" config/dev.exs\n\
+  sed -i "s/database: \"ngobrolin_dev\"/database: \"${DATABASE_NAME:-ngobrolin_dev}\"/" config/dev.exs\n\
+  \n\
+  # Modify the endpoint config to listen on all interfaces\n\
+  sed -i "s/ip: {127, 0, 0, 1}/ip: {0, 0, 0, 0}/" config/dev.exs\n\
+  \n\
+  # Wait for PostgreSQL to be ready\n\
+  timeout=60\n\
+  countdown=$timeout\n\
+  echo "Waiting for PostgreSQL to be ready..."\n\
+  while ! pg_isready -h $DATABASE_HOST -U ${DATABASE_USER:-postgres} -d ${DATABASE_NAME:-ngobrolin_dev} && [ $countdown -gt 0 ]; do\n\
+    countdown=$((countdown-1))\n\
+    echo "Waiting for PostgreSQL... ${countdown}s remaining"\n\
+    sleep 1\n\
+  done\n\
+  if [ $countdown -eq 0 ]; then\n\
+    echo "Timed out waiting for PostgreSQL!"\n\
+    exit 1\n\
+  fi\n\
+  echo "PostgreSQL is ready!"\n\
+fi\n\
+\n\
 # Install dependencies\n\
 mix deps.get\n\
 \n\
-# Install npm dependencies\n\
-if [ -d "./assets" ]; then\n\
-  npm --prefix ./assets ci\n\
-fi\n\
+# Skip npm installation (no package.json in assets folder yet)\n\
+# Uncomment this when package.json is added to assets\n\
+# if [ -d "./assets" ] && [ -f "./assets/package.json" ]; then\n\
+#   npm --prefix ./assets ci || npm --prefix ./assets install\n\
+# fi\n\
 \n\
-# Setup the application\n\
+# Setup the application with proper database initialization\n\
+echo "Running database setup..."\n\
+mix ecto.drop --force || true\n\
+mix ecto.create \n\
+mix ecto.setup\n\
 mix setup\n\
 \n\
 # Start the Phoenix server\n\
+echo "Starting Phoenix server..."\n\
 exec mix phx.server\n\
 ' > /entrypoint.sh && chmod +x /entrypoint.sh
 
