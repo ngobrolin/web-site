@@ -1,0 +1,74 @@
+FROM debian:bullseye-20240513-slim
+
+# Install basic dependencies
+RUN apt-get update && \
+    apt-get install -y build-essential git inotify-tools postgresql-client \
+    python3 python3-pip curl gnupg wget ca-certificates procps \
+    && pip3 install yt-dlp
+
+# Install Erlang and Elixir using direct download
+RUN apt-get update && \
+    apt-get install -y libssl-dev libncurses5-dev && \
+    apt-get clean && \
+    # Download and install Erlang
+    wget https://github.com/erlang/otp/releases/download/OTP-27.2.2/otp_src_27.2.2.tar.gz && \
+    tar -xzf otp_src_27.2.2.tar.gz && \
+    cd otp_src_27.2.2 && \
+    ./configure && \
+    make -j$(nproc) && \
+    make install && \
+    cd .. && \
+    rm -rf otp_src_27.2.2* && \
+    # Download and install Elixir
+    wget https://github.com/elixir-lang/elixir/archive/v1.16.3.tar.gz && \
+    tar -xzf v1.16.3.tar.gz && \
+    cd elixir-1.16.3 && \
+    make && \
+    make install && \
+    cd .. && \
+    rm -rf elixir-1.16.3* v1.16.3.tar.gz && \
+    # Verify installation
+    elixir --version
+
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+# Set working directory
+WORKDIR /app
+
+# Install hex + rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+# Set environment variables
+ENV MIX_ENV=dev
+ENV PORT=4000
+
+# Expose port
+EXPOSE 4000
+
+# Create entrypoint script
+RUN echo '#!/bin/bash\n\
+cd /app\n\
+\n\
+# Clean any previous builds to avoid OTP version conflicts\n\
+rm -rf _build\n\
+\n\
+# Install dependencies\n\
+mix deps.get\n\
+\n\
+# Install npm dependencies\n\
+if [ -d "./assets" ]; then\n\
+  npm --prefix ./assets ci\n\
+fi\n\
+\n\
+# Setup the application\n\
+mix setup\n\
+\n\
+# Start the Phoenix server\n\
+exec mix phx.server\n\
+' > /entrypoint.sh && chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
