@@ -6,9 +6,9 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :ngobrolin, Ngobrolin.Repo,
-  username: System.get_env("POSTGRES_USER", "riza"),
-  password: System.get_env("POSTGRES_PASSWORD", "empty"),
-  hostname: System.get_env("POSTGRES_HOSTNAME", "localhost"),
+  username: "riza",
+  password: "postgres",
+  hostname: "localhost",
   database:
     System.get_env("POSTGRES_DB", "ngobrolin_test#{System.get_env("MIX_TEST_PARTITION")}"),
   pool: Ecto.Adapters.SQL.Sandbox,
