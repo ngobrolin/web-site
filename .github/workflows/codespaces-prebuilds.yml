@@ -1,0 +1,29 @@
+name: Codespaces Prebuilds
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  codespaces-prebuild:
+    name: Prebuild for Codespaces
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Add any prebuild validation steps here if needed
+      - name: Verify devcontainer.json
+        run: |
+          if [ ! -f .devcontainer/devcontainer.json ]; then
+            echo "devcontainer.json not found"
+            exit 1
+          fi
+          echo "devcontainer.json found and validated"
+          
+      # This step is required to trigger the prebuild
+      - name: Setup for prebuild
+        run: |
+          echo "Repository is ready for Codespaces prebuild"

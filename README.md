@@ -1,5 +1,7 @@
 # Ngobrolin
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=ngobrolin&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json)
+
 Ngobrolin is a video podcast platform focused on delivering engaging tech content. This repository contains both the main Phoenix application and a Next.js reference implementation.
 
 ## Progress
@@ -70,6 +72,16 @@ Before running the application, ensure you have the following installed:
   * Make sure the PostgreSQL service is running before starting the application
 
 ### Starting the Server
+
+#### GitHub Codespaces
+This repository is configured for development in GitHub Codespaces:
+
+1. Click the "Open in GitHub Codespaces" button at the top of this README
+2. Wait for the container to build (includes Elixir, Node.js, and PostgreSQL)
+3. The server will automatically start at port 4000
+4. Access your application at the Codespaces forwarded port URL
+
+For detailed information about the Codespaces setup, see [Codespaces Documentation](docs/CODESPACES.md).
 
 #### Local Setup
 To start your Phoenix server locally:

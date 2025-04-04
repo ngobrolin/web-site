@@ -1,0 +1,27 @@
+{
+  "name": "Ngobrolin Phoenix",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/app",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "jakebecker.elixir-ls",
+        "phoenixframework.phoenix",
+        "bradlc.vscode-tailwindcss",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "elixirLS.suggestSpecs": true,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "JakeBecker.elixir-ls"
+      }
+    }
+  },
+  "forwardPorts": [4000],
+  "postCreateCommand": ".devcontainer/entrypoint-codespaces.sh",
+  "remoteUser": "root",
+  "containerEnv": {
+    "CODESPACES": "true"
+  }
+}
