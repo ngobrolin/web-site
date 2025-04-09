@@ -9,7 +9,9 @@ import Config
 
 config :ngobrolin,
   ecto_repos: [Ngobrolin.Repo],
-  generators: [timestamp_type: :utc_datetime, binary_id: true]
+  generators: [timestamp_type: :utc_datetime, binary_id: true],
+  # Base URL for the website
+  site_url: "https://ngobrolinweb.riza.world"
 
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 

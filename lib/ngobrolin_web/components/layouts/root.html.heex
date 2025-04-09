@@ -24,7 +24,7 @@
       property="og:url"
       content={
         assigns[:canonical_url] ||
-          "https://ngobrolinweb.riza.world#{Phoenix.Controller.current_path(@conn)}"
+          NgobrolinWeb.ViewHelpers.site_url(Phoenix.Controller.current_path(@conn))
       }
     />
     <meta property="og:title" content={assigns[:page_title] || "Ngobrolin WEB"} />
@@ -37,7 +37,7 @@
     />
     <meta
       property="og:image"
-      content={assigns[:og_image] || "https://ngobrolinweb.riza.world/images/og-image.png"}
+      content={assigns[:og_image] || NgobrolinWeb.ViewHelpers.site_url("/images/og-image.png")}
     />
     
 <!-- Twitter -->
@@ -46,7 +46,7 @@
       name="twitter:url"
       content={
         assigns[:canonical_url] ||
-          "https://ngobrolinweb.riza.world#{Phoenix.Controller.current_path(@conn)}"
+          NgobrolinWeb.ViewHelpers.site_url(Phoenix.Controller.current_path(@conn))
       }
     />
     <meta name="twitter:title" content={assigns[:page_title] || "Ngobrolin WEB"} />
@@ -59,7 +59,7 @@
     />
     <meta
       name="twitter:image"
-      content={assigns[:og_image] || "https://ngobrolinweb.riza.world/images/og-image.png"}
+      content={assigns[:og_image] || NgobrolinWeb.ViewHelpers.site_url("/images/og-image.png")}
     />
     
 <!-- Canonical URL -->
@@ -67,7 +67,7 @@
       rel="canonical"
       href={
         assigns[:canonical_url] ||
-          "https://ngobrolinweb.riza.world#{Phoenix.Controller.current_path(@conn)}"
+          NgobrolinWeb.ViewHelpers.site_url(Phoenix.Controller.current_path(@conn))
       }
     />
     
@@ -98,13 +98,13 @@
         "@type": "PodcastSeries",
         "name": "Ngobrolin WEB",
         "description": "Podcast tentang pengembangan web dan teknologi terkini.",
-        "url": "https://ngobrolinweb.riza.world",
+        "url": "<%= NgobrolinWeb.ViewHelpers.site_url() %>",
         "publisher": {
           "@type": "Organization",
           "name": "Ngobrolin WEB",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://ngobrolinweb.riza.world/images/logo.jpeg"
+            "url": "<%= NgobrolinWeb.ViewHelpers.site_url("/images/logo.jpeg") %>"
           }
         },
         "inLanguage": "id-ID"
