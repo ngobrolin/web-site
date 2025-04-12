@@ -37,4 +37,22 @@ defmodule NgobrolinWeb.ViewHelpers do
       string
     end
   end
+
+  @doc """
+  Returns the configured site URL from application config.
+  This centralizes the website URL to make it easier to change domains.
+  """
+  def site_url do
+    Application.get_env(:ngobrolin, :site_url)
+  end
+
+  @doc """
+  Joins the site URL with a provided path.
+  Ensures proper formatting of URLs throughout the site.
+  """
+  def site_url(path) do
+    base = site_url()
+    path = if String.starts_with?(path, "/"), do: path, else: "/#{path}"
+    "#{base}#{path}"
+  end
 end

@@ -27,7 +27,7 @@ Ngobrolin is a video podcast platform focused on delivering engaging tech conten
 - [x] Setup CI
 - [x] Deploy
 - [x] Add sync episodes routes 
-- [ ] Meta tags, card and SEO stuff
+- [x] Meta tags, card and SEO stuff
 - [ ] Episode descriptions using markdown files
 - [ ] Add comment functionality
 
